@@ -5,9 +5,12 @@
 #include <iostream>
 #include <stdexcept>
 #include <vector>
-#include "catan.hpp"
-#include "player.hpp"
-#include "board.hpp"
+#include "Catan.hpp"
+#include "Player.hpp"
+#include "Board.hpp"
+#include "DevCard.hpp"
+#include "Land.hpp"
+
 using namespace std;
 using namespace ariel;
 
