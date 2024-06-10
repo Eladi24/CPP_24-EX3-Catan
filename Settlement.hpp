@@ -3,23 +3,20 @@
 
 #include "Point.hpp"
 #include "Player.hpp"
+#include "Structure.hpp"
+
 namespace ariel 
 {
-    class Settlement
+    class Settlement: public Structure 
     {
         private:
-            Point _location;
-            Player _owner;
             bool _isCity;
+            
         public:
-            Settlement(Point location, Player owner);
-            Settlement(Point location, Player owner, bool isCity);
+            Settlement(Player owner);
+            Settlement(Player owner, bool isCity);
             ~Settlement();
-            Point getLocation();
-            Player getOwner();
-            void setOwner(Player owner);
-            void setCity();
-            bool isCity();
+            
             void yieldResources();
             
 

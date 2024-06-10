@@ -8,18 +8,22 @@ namespace ariel
 {
     class Trail
     {
-    private:
-        Point _start;
-        Point _end;
-        bool _isRoad;
+        private:
+            Player* _owner;
+            bool _hasRoad;
+            Vertex _start;
+            Vertex _end;
+        
+        public:
+            Trail(Player* owner, Vertex start, Vertex end);
+            Trail(Vertex start, Vertex end);
+            ~Trail();
+            Player getOwner();
+            bool hasRoad();
+            Vertex getStart();
+            Vertex getEnd();
+            void setRoad(Player* owner);
 
-    public:
-        Trail(Point start, Point end);
-        ~Trail();
-        void setRoad();
-        bool isRoad();
-        Point getStart();
-        Point getEnd();
     };
 }
 

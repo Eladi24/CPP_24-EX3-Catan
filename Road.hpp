@@ -2,6 +2,7 @@
 #define _ROAD_HPP_
 
 #include "Player.hpp"
+#include "Trail.hpp"
 
 
 namespace ariel
@@ -10,7 +11,7 @@ namespace ariel
     {
         private:
             Player _owner;
-            
+            Trail _trail;
     };
 }
 

@@ -1,9 +1,10 @@
 #ifndef _LAND_HPP_
 #define _LAND_HPP_
 
+using namespace std;
 namespace ariel
 {
-    enum ResourceType
+    enum LandType
     {
         Forest,
         Hills,
@@ -13,20 +14,34 @@ namespace ariel
         Desert
     };
 
+    enum ResourceType
+    {
+        Wood,
+        Brick,
+        Ore,
+        Wool,
+        Grain
+    };
+
     class Land
     {
         private:
-            ResourceType _type;
+            LandType _landType;
+            ResourceType _resourceType;
             int _value;
-            bool _hasRobber;
+            int id;
+            array<Vertex, 6> _vertices;
+            array<Trail, 6> _edges;
+
+            
         public:
-            Land(ResourceType type, int value);
-            Land(ResourceType type, int value, bool hasRobber);
+            Land(LandType landType, int value, int id);
+
             ~Land();
             ResourceType getType();
             int getValue();
-            bool hasRobber();
-            void setRobber(bool hasRobber);
+            void setValue(int value);
+            
     };
 
 } // namespace ariel

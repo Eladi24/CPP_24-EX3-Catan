@@ -4,20 +4,38 @@
 #include "Die.hpp"
 #include "Settlement.hpp"
 #include "Road.hpp"
+#include "DevCard.hpp"
+#include "Land.hpp"
+#include "Board.hpp"
+#include "Vertex.hpp"
+#include "Structure.hpp"
 
 namespace ariel
 {
+    typedef struct TradeRequest
+        {
+            const Player requester;
+            ResourceType resourceToGive;
+            ResourceType resourceToGet;
+            int amountToGive;
+            int amountToGet;
+        } TradeRequest;
+
     class Player
     {
     private:
-        const string name;
-        map<ResourceType, int> resources;
-        vector<Settlement> settlements;
-        vector<Road> roads;
-        int points;
-        vector<DevCard> devCards;
+        const string _name;
+        map<ResourceType, uint> _resources;
+        map<Vertex, Structure> _structures;
+        vector<Settlement> _settlements;
+        vector<Road> _roads;
+        int _victoryPoints;
+        vector<DevCard> _devCards;
         Die _die1;
         Die _die2;
+        bool _isTurn;
+        
+        
         
     public:
         Player(const string name);
@@ -26,10 +44,14 @@ namespace ariel
         void placeRoad(vector<string> places, vector<int> placesNum, Board board);
         void rollDice();
         void endTurn();
-        void trade(Player pToTrade, string resourceToGive, string resourceToGet, int amountToGive, int amountToGet);
+        bool trade(Player pToTrade, ResourceType resourceToGive, ResourceType resourceToGet, int amountToGive, int amountToGet);
+        bool reviewTradeRequest(TradeRequest tradeRequest);
         void buyDevelopmentCard();
         void printPoints();
         string getName();
+        void addResource(ResourceType resource, int amount);
+        void removeResource(ResourceType resource, int amount);
+
     };
 } // namespace ariel
 

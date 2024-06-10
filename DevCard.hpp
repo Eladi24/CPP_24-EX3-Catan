@@ -20,11 +20,11 @@ namespace ariel
     class DevCard
     {
     private:
-        string type;
+        CardType type;
         string name;
         
     public:
-        DevCard(string type, string name, string description, int value);
+        DevCard(CardType type, string name, string description, int value);
         ~DevCard();
         void activate();
         string getType();
