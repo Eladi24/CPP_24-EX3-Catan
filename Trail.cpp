@@ -7,7 +7,7 @@ using namespace std;
 using namespace ariel;
 
 // Constructor
-Trail::Trail(Player* owner, Vertex start, Vertex end): _owner(owner), _start(start), _end(end), _hasRoad(true) {}
+Trail::Trail(const Player* owner, Vertex start, Vertex end): _owner(owner), _start(start), _end(end), _hasRoad(true) {}
 
 Trail::Trail(Vertex start, Vertex end): _owner(nullptr), _start(start), _end(end), _hasRoad(false) {}
 
@@ -36,10 +36,17 @@ Vertex Trail::getEnd()
 }
 
 // Setters
-void Trail::setRoad(Player* owner)
+void Trail::setRoad(const Player* owner)
 {
-    this->_owner = owner;
-    this->_hasRoad = true;
+    if (!this->_hasRoad)
+    {
+        this->_hasRoad = true;
+        this->_owner = owner;
+    }
+    else
+    {
+        throw "This trail already has a road";
+    }
 }
 
 

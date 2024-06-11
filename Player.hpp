@@ -5,7 +5,7 @@
 #include "Settlement.hpp"
 #include "Road.hpp"
 #include "DevCard.hpp"
-#include "Land.hpp"
+#include "Hexagon.hpp"
 #include "Board.hpp"
 #include "Vertex.hpp"
 #include "Structure.hpp"
@@ -48,7 +48,7 @@ namespace ariel
         bool reviewTradeRequest(TradeRequest tradeRequest);
         void buyDevelopmentCard();
         void printPoints();
-        string getName();
+        string getName() const;
         void addResource(ResourceType resource, int amount);
         void removeResource(ResourceType resource, int amount);
 

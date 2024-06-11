@@ -10,11 +10,6 @@ namespace ariel
         Player _p2;
         Player _p3;
         Board _board;
-        vector<ResourceType> _pack1;
-        vector<ResourceType> _pack2;
-        vector<ResourceType> _pack3;
-        vector<ResourceType> _pack4;
-        vector<ResourceType> _pack5;
         map<DevCard, int> _devCardsPack; 
     public:
         Catan(Player p1, Player p2, Player p3);

@@ -1,27 +1,37 @@
 #ifndef _BOARD_HPP_
 #define _BOARD_HPP_
 
-
+#include <unordered_map>
+#include <utility>
 #include <vector>
+#include <array>
+#include "Hexagon.hpp"
+#include "Player.hpp"
+#include "Point.hpp"
+
+using namespace std;
 
 namespace ariel
 {
     class Board
     {
     private:
-        std::vector<std::vector<char>> tiles; // 2D vector to represent the board tiles
-        int rows; // number of rows in the board
-        int columns; // number of columns in the board
+        // A 2D array of hexagons in size 5x5 as a vector of vectors
+        vector<vector<Hexagon>> _hexagons;
+        unordered_map<Point, Hexagon, Point::PointHasher> _hexagons;
+        unordered_map<Point, Vertex, Point::PointHasher> _vertices;
+        unordered_map<pair<Point, Point>, Trail, pair<Point::PointHasher, Point::PointHasher>> _edges;
 
     public:
         Board(); // constructor
         ~Board(); // destructor
+        const Hexagon& getHexagon(int q, int r) const;
 
-        void setTile(int row, int column, char value); // method to set the value of a specific tile
-        char getTile(int row, int column); // method to get the value of a specific tile
-
-        void displayBoard(); // method to display the board
-        void performAction(); // method to perform actions on the board
+        void placeSettlement(const Player& owner, const Point& point);
+        void placeCity(const Player& owner, const Point& point);
+        void placeRoad(const Player& owner, const Point& start, const Point& end);
+        void initHexagons();
+        void printBoard();
     };
 } // namespace ariel
 

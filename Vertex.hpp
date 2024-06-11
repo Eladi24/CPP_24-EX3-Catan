@@ -13,23 +13,26 @@ namespace ariel
     {
         private:
             vector<Vertex> _neighbors;
-            Player* _owner;
+            const Player* _owner;
             Structure* _structure;
             bool _isOccupied;
             bool _isCity;
             int _id;
             
         public:
-            Vertex(int x, int y, int id);
-            Vertex(int x, int y, int id, Player* owner, Structure* structure);
+            const static double squareRoot3Div2 = 0.86602540378;
+            const static double half = 0.5;
+            Vertex(double x, double y, int id);
+            Vertex(double x, double y, int id, const Player* owner, Structure* structure);
             ~Vertex();
             void addNeighbor(Vertex v);
-            void buildSettlement(Player* p);
-            void buildCity(Player* p);
+            void buildSettlement(const Player* p);
+            void buildCity(const Player* p);
             void yieldResources();
             bool isOccupied();
             bool isCity();
             Player getOwner();
+            int getId();
     };
 }
 

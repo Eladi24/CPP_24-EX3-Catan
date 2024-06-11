@@ -8,11 +8,11 @@ namespace ariel
     class Point
     {
     private:
-        int _x;
-        int _y;
+        double _x;
+        double _y;
 
     public:
-        Point(int x, int y);
+        Point(double x, double y);
         Point(const Point &p); // Copy constructor
         ~Point();
         int getX();

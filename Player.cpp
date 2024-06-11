@@ -20,7 +20,10 @@ bool Player::trade(Player pToTrade, ResourceType resourceToGive, ResourceType re
     TradeRequest request = {*this, resourceToGive, resourceToGet, amountToGive, amountToGet};
     if (pToTrade.reviewTradeRequest(request) == true)
     {
-        
+        this->_resources[resourceToGive] -= amountToGive;
+        this->_resources[resourceToGet] += amountToGet;
+        pToTrade._resources[resourceToGive] += amountToGive;
+        pToTrade._resources[resourceToGet] -= amountToGet;
     }
 }
 
@@ -31,9 +34,7 @@ bool Player::reviewTradeRequest(TradeRequest tradeRequest) {
     if (tradeRequest.amountToGet > _resources[tradeRequest.resourceToGet]) {
         return false;
     }
-    // if the player agrees to the trade, the resources are exchanged.
-    _resources[tradeRequest.resourceToGive] -= tradeRequest.amountToGive;
-    _resources[tradeRequest.resourceToGet] += tradeRequest.amountToGet;
+    
     return true;
 }
 
@@ -57,7 +58,7 @@ void Player::printPoints()
     cout << "Player " << this->_name << " has " << this->_victoryPoints << " points." << endl;
 }
 
-string Player::getName()
+string Player::getName()const
 {
     return this->_name;
 }

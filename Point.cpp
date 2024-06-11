@@ -5,7 +5,7 @@
 using namespace std;
 using namespace ariel;
 
-Point::Point(int x, int y): _x(x), _y(y) {}
+Point::Point(double x, double y): _x(x), _y(y) {}
 
 Point::Point(const Point &p): _x(p._x), _y(p._y) {}
 

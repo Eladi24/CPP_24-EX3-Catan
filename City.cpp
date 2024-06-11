@@ -7,3 +7,10 @@ using namespace std;
 using namespace ariel;
 
 City::City(Player owner): Structure(owner) {}
+
+City::~City() {}
+
+void City::yieldResources()
+{
+    
+}

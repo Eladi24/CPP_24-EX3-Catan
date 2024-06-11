@@ -12,6 +12,7 @@ namespace ariel
         private:
             Player _owner;
             Trail _trail;
+        
     };
 }
 
