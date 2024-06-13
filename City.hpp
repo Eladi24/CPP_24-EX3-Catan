@@ -3,16 +3,21 @@
 
 #include "Structure.hpp"
 
+
 using namespace std;
 
 namespace ariel
 {
     class City: public Structure
     {
+        private:
+
+                const int _productionRate = 2;
         public:
-            City(Player owner);
+            City(Player* owner): Structure(owner) {}
             ~City();
-            void yieldResources();
+            void yieldResources() override;
+            
     };
 }
 

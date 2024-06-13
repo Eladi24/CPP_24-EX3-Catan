@@ -1,36 +1,34 @@
 #ifndef _PLAYER_HPP_
 #define _PLAYER_HPP_
-#include <map>
+
 #include "Die.hpp"
-#include "Settlement.hpp"
+#include "Vertex.hpp"
+#include "Trail.hpp"
+#include "Hexagon.hpp"
 #include "Road.hpp"
 #include "DevCard.hpp"
-#include "Hexagon.hpp"
-#include "Board.hpp"
-#include "Vertex.hpp"
-#include "Structure.hpp"
 
 namespace ariel
 {
+    class Board;
     typedef struct TradeRequest
         {
-            const Player requester;
             ResourceType resourceToGive;
             ResourceType resourceToGet;
             int amountToGive;
             int amountToGet;
         } TradeRequest;
-
+   
     class Player
     {
     private:
         const string _name;
         map<ResourceType, uint> _resources;
-        map<Vertex, Structure> _structures;
-        vector<Settlement> _settlements;
-        vector<Road> _roads;
+        map<Vertex*, Structure*> _structures;
+        
+        map <Trail, Road> _roads;
         int _victoryPoints;
-        vector<DevCard> _devCards;
+        map<DevCard*, uint> _devCards;
         Die _die1;
         Die _die2;
         bool _isTurn;
@@ -38,7 +36,7 @@ namespace ariel
         
         
     public:
-        Player(const string name);
+        Player(const string name): _name(name), _victoryPoints(0), _isTurn(false) {}
         ~Player();
         void placeSettelemnt(vector<string> places, vector<int> placesNum, Board board);
         void placeRoad(vector<string> places, vector<int> placesNum, Board board);
@@ -48,9 +46,10 @@ namespace ariel
         bool reviewTradeRequest(TradeRequest tradeRequest);
         void buyDevelopmentCard();
         void printPoints();
-        string getName() const;
+        string getName() const { return this->_name; }
         void addResource(ResourceType resource, int amount);
         void removeResource(ResourceType resource, int amount);
+        uint getResourceAmount(ResourceType resource) const { return this->_resources.at(resource); }
 
     };
 } // namespace ariel

@@ -3,11 +3,13 @@
 
 #include <unordered_map>
 #include <utility>
-#include <vector>
-#include <array>
-#include "Hexagon.hpp"
-#include "Player.hpp"
+#include <memory>
 #include "Point.hpp"
+#include "Vertex.hpp"
+#include "Trail.hpp"
+#include "Hexagon.hpp"
+
+
 
 using namespace std;
 
@@ -17,20 +19,22 @@ namespace ariel
     {
     private:
         // A 2D array of hexagons in size 5x5 as a vector of vectors
-        vector<vector<Hexagon>> _hexagons;
-        unordered_map<Point, Hexagon, Point::PointHasher> _hexagons;
-        unordered_map<Point, Vertex, Point::PointHasher> _vertices;
-        unordered_map<pair<Point, Point>, Trail, pair<Point::PointHasher, Point::PointHasher>> _edges;
+        vector<vector<Hexagon>> _hexagonGrid;
+        // A map of points to vertices
+        map<Point, shared_ptr<Vertex>> _verticesMap;
+        // A map of points to edges
+        map<pair<shared_ptr<Vertex>, shared_ptr<Vertex>>, shared_ptr<Trail>> _edgesMap;
+
+        // A map of points to hexagons
+        map<Point, Hexagon> _hexagonsMap;
 
     public:
         Board(); // constructor
         ~Board(); // destructor
-        const Hexagon& getHexagon(int q, int r) const;
-
-        void placeSettlement(const Player& owner, const Point& point);
-        void placeCity(const Player& owner, const Point& point);
-        void placeRoad(const Player& owner, const Point& start, const Point& end);
         void initHexagons();
+
+        const Hexagon& getHexagon(int q, int r) const { return this->_hexagonGrid[q][r]; }
+        
         void printBoard();
     };
 } // namespace ariel

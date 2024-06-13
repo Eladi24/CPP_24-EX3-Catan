@@ -1,14 +1,10 @@
 #include <iostream>
 #include <vector>
-
 #include "Player.hpp"
-#include "Settlement.hpp"
-#include "Point.hpp"
+
 
 using namespace std;
 using namespace ariel;
-
-Player::Player(const string name): _name(name), _victoryPoints(0), _isTurn(false) {}
 
 Player::~Player() {}
 
@@ -17,14 +13,16 @@ void Player::rollDice() {
 }
 
 bool Player::trade(Player pToTrade, ResourceType resourceToGive, ResourceType resourceToGet, int amountToGive, int amountToGet) {
-    TradeRequest request = {*this, resourceToGive, resourceToGet, amountToGive, amountToGet};
+    TradeRequest request = {resourceToGive, resourceToGet, amountToGive, amountToGet};
     if (pToTrade.reviewTradeRequest(request) == true)
     {
         this->_resources[resourceToGive] -= amountToGive;
         this->_resources[resourceToGet] += amountToGet;
         pToTrade._resources[resourceToGive] += amountToGive;
         pToTrade._resources[resourceToGet] -= amountToGet;
+        return true;
     }
+    return false;
 }
 
 bool Player::reviewTradeRequest(TradeRequest tradeRequest) {
@@ -56,11 +54,6 @@ void Player::removeResource(ResourceType resource, int amount)
 void Player::printPoints()
 {
     cout << "Player " << this->_name << " has " << this->_victoryPoints << " points." << endl;
-}
-
-string Player::getName()const
-{
-    return this->_name;
 }
 
 

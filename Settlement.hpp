@@ -1,23 +1,24 @@
 #ifndef _SETTLEMENT_HPP_
 #define _SETTLEMENT_HPP_
 
-#include "Point.hpp"
-#include "Player.hpp"
 #include "Structure.hpp"
+
 
 namespace ariel 
 {
+    
     class Settlement: public Structure 
     {
         private:
             bool _isCity;
             
         public:
-            Settlement(Player owner);
-            Settlement(Player owner, bool isCity);
+            Settlement(Player* owner): Structure(owner), _isCity(false) {}
+            Settlement(Player* owner, bool isCity): Structure(owner), _isCity(isCity) {}
             ~Settlement();
             
             void yieldResources();
+            
             
 
     };

@@ -9,7 +9,7 @@
 #include "Player.hpp"
 #include "Board.hpp"
 #include "DevCard.hpp"
-#include "Land.hpp"
+
 
 using namespace std;
 using namespace ariel;

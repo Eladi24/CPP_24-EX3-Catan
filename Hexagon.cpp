@@ -3,14 +3,14 @@
 #include <array>
 #include "Hexagon.hpp"
 
+
 using namespace std;
 using namespace ariel;
 
 // Constructor
 Hexagon::Hexagon(LandType landType, int value, Point &center, int id): _landType(landType), _value(value), _center(center), id(id) {
     
-    this->initResources();
-    this->initHexagon();
+    this->initResources(); 
 }
 
 // Destructor
@@ -44,79 +44,47 @@ void Hexagon::initResources()
     }
 }
 
-// Get the resource type of the hexagon
-ResourceType Hexagon::getResourceType()
-{
-    return this->_resourceType;
-}
-
-// Get the land type of the hexagon
-LandType Hexagon::getLandType()
-{
-    return this->_landType;
-}
-
-
-// Get the value of the hexagon
-int Hexagon::getValue()
-{
-    return this->_value;
-}
-
-// Set the value of the hexagon
-void Hexagon::setValue(int value)
-{
-    this->_value = value;
-}
 
 // Initialize the vertices of the hexagon
-void Hexagon::initHexagon()
+void Hexagon::initHexagon(map<Point, shared_ptr<Vertex>>& verticesMap, map<pair<shared_ptr<Vertex>, shared_ptr<Vertex>>, shared_ptr<Trail>>& edgesMap)
 {
-    double q = this->_center.getX();
-    double r = this->_center.getY();
-    double s = -q - r;
-    if (s != 0)
-    {
-        throw "Invalid hexagon center";
-    }
-
-    // Initialize the vertices of the hexagon
-    Vertex top(q, r + 1, 0);
-    this->_verticesMap["top"].insert(top);
-
-    Vertex topRight(q + Vertex::squareRoot3Div2, r + Vertex::half, 1);
-    this->_verticesMap["topRight"].insert(topRight);
-
-    Vertex bottomRight(q + Vertex::squareRoot3Div2, r - Vertex::half, 2);
-    this->_verticesMap["bottomRight"].insert(bottomRight);
-
-    Vertex bottom(q, r - 1, 3);
-    this->_verticesMap["bottom"].insert(bottom);
-
-    Vertex bottomLeft(q - Vertex::squareRoot3Div2, r - Vertex::half, 4);
-    this->_verticesMap["bottomLeft"].insert(bottomLeft);
-
-    Vertex topLeft(q - Vertex::squareRoot3Div2, r + Vertex::half, 5);
-    this->_verticesMap["topLeft"].insert(topLeft);
+   // Create or reuse vertices
+    auto createVertex = [&](double q, double r, int id) {
+        Point p = Point(q, r);
+        if (verticesMap.find(p) == verticesMap.end())
+        {
+            verticesMap[p] = make_shared<Vertex>(q, r, id);
+        }
+        return verticesMap[p];
+    };
+    auto top = createVertex(this->_center.getX(), this->_center.getY() + 1, 0);
+    auto topRight = createVertex(this->_center.getX() + Vertex::squareRoot3Div2, this->_center.getY() + Vertex::half, 1);
+    auto bottomRight = createVertex(this->_center.getX() + Vertex::squareRoot3Div2, this->_center.getY() - Vertex::half, 2);
+    auto bottom = createVertex(this->_center.getX(), this->_center.getY() - 1, 3);
+    auto bottomLeft = createVertex(this->_center.getX() - Vertex::squareRoot3Div2, this->_center.getY() - Vertex::half, 4);
+    auto topLeft = createVertex(this->_center.getX() - Vertex::squareRoot3Div2, this->_center.getY() + Vertex::half, 5);
+    this->_verticesMap[TOP] = top;
+    this->_verticesMap[TOP_RIGHT] = topRight;
+    this->_verticesMap[BOTTOM_RIGHT] = bottomRight;
+    this->_verticesMap[BOTTOM] = bottom;
+    this->_verticesMap[BOTTOM_LEFT] = bottomLeft;
+    this->_verticesMap[TOP_LEFT] = topLeft;
     
-    
-    // Add the edges to the hexagon
-    Trail topRightEdge(top, topRight);
-    this->_edgesMap["topRightEdge"].insert(topRightEdge);
+    // Create or reuse edges
+    auto createEdge = [&](shared_ptr<Vertex> v1, shared_ptr<Vertex> v2) {
+        pair<shared_ptr<Vertex>, shared_ptr<Vertex>> key = {v1, v2};
+        if (edgesMap.find(key) == edgesMap.end())
+        {
+            edgesMap[key] = make_shared<Trail>(v1, v2);
+        }
+        return edgesMap[key];
+    };
 
-    Trail rightEdge(topRight, bottomRight);
-    this->_edgesMap["rightEdge"].insert(rightEdge);
-
-    Trail bottomRightEdge(bottomRight, bottom);
-    this->_edgesMap["bottomRightEdge"].insert(bottomRightEdge);
-
-    Trail bottomLeftEdge(bottom, bottomLeft);
-    this->_edgesMap["bottomLeftEdge"].insert(bottomLeftEdge);
-
-    Trail leftEdge(bottomLeft, topLeft);
-    this->_edgesMap["leftEdge"].insert(leftEdge);
-
-    Trail topLeftEdge(topLeft, top);
-    this->_edgesMap["topLeftEdge"].insert(topLeftEdge);
-    
+    this->_edgesMap[TOP_RIGHT_EDGE] = createEdge(top, topRight);
+    this->_edgesMap[RIGHT_EDGE] = createEdge(topRight, bottomRight);
+    this->_edgesMap[BOTTOM_RIGHT_EDGE] = createEdge(bottomRight, bottom);
+    this->_edgesMap[BOTTOM_LEFT_EDGE] = createEdge(bottom, bottomLeft);
+    this->_edgesMap[LEFT_EDGE] = createEdge(bottomLeft, topLeft);
+    this->_edgesMap[TOP_LEFT_EDGE] = createEdge(topLeft, top); 
 }
+

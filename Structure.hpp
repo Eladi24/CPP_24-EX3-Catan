@@ -3,25 +3,28 @@
 
 #include <iostream>
 #include <vector>
-#include "Vertex.hpp"
+
+
 using namespace std;
 
 namespace ariel
 {
+    class Player;
+
     class Structure
     {
         protected:
             // The owner of the structure
-            Player _owner;
+            Player* _owner;
             
         public:
             // Constructor
-            Structure(Player owner);
+            Structure(Player* owner): _owner(owner) {}
             // Destructor
-            ~Structure();
+            virtual ~Structure() = default;
             
             // Get the owner of the structure
-            Player getOwner();
+            Player* getOwner() { return this->_owner;}
             // Yield resources
             virtual void yieldResources() = 0;
             

@@ -5,28 +5,24 @@
 using namespace std;
 using namespace ariel;
 
-Point::Point(double x, double y): _x(x), _y(y) {}
-
-Point::Point(const Point &p): _x(p._x), _y(p._y) {}
+Point::~Point() {}
 
 bool Point::operator==(const Point &p) const
 {
     return (this->_x == p._x && this->_y == p._y);
 }
 
-
-int Point::getX()
+double Point::distance(const Point &p) const
 {
-    return this->_x;
+    return sqrt(pow(this->_x - p._x, 2) + pow(this->_y - p._y, 2));
 }
 
-int Point::getY()
+bool Point::operator<(const Point &other) const
 {
-    return this->_y;
+    if (_x < other._x)
+        return true;
+    if (_x > other._x)
+        return false;
+    return _y < other._y;
 }
-
-
-
-
-
 

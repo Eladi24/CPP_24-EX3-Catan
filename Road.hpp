@@ -1,18 +1,21 @@
 #ifndef _ROAD_HPP_
 #define _ROAD_HPP_
 
-#include "Player.hpp"
-#include "Trail.hpp"
-
 
 namespace ariel
 {
     class Road
     {
+        class Player;
+
         private:
-            Player _owner;
-            Trail _trail;
-        
+            Player* _owner;
+            
+        public:
+            Road(Player* owner): _owner(owner) {}
+            ~Road() {}
+            Player* getOwner() const { return this->_owner; }
+            
     };
 }
 

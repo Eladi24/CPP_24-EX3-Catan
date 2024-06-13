@@ -1,9 +1,7 @@
 #ifndef _TRAIL_HPP_
 #define _TRAIL_HPP_
-
-#include "Point.hpp"
-#include "Player.hpp"
-
+#include <memory>
+#include "Vertex.hpp"
 /*
     The Trail class represents a trail (edge) in the game of Catan.
     A trail is a path between two vertices on the board.
@@ -13,6 +11,7 @@
 
 namespace ariel
 {
+    
     class Trail
     {
         private:
@@ -23,14 +22,15 @@ namespace ariel
         
         public:
             Trail(const Player* owner, Vertex start, Vertex end);
-            Trail(Vertex start, Vertex end);
+            Trail(Vertex start, Vertex end): _owner(nullptr), _start(start), _end(end), _hasRoad(false) {}
+            Trail(std::shared_ptr<Vertex> start, std::shared_ptr<Vertex> end): _owner(nullptr), _start(*start), _end(*end), _hasRoad(false) {}
             ~Trail();
-            Player getOwner();
-            bool hasRoad();
-            Vertex getStart();
-            Vertex getEnd();
+            const Player* getOwner() const { return this->_owner; }
+            bool hasRoad() const { return this->_hasRoad; }
+            Vertex getStart() const { return this->_start; };
+            Vertex getEnd() const { return this->_end; };
             void setRoad(const Player* owner);
-
+           
     };
 }
 
