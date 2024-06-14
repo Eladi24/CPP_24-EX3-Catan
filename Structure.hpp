@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <vector>
-
+#include "Cashbox.hpp"
 
 using namespace std;
 
@@ -26,7 +26,7 @@ namespace ariel
             // Get the owner of the structure
             Player* getOwner() { return this->_owner;}
             // Yield resources
-            virtual void yieldResources() = 0;
+            virtual void yieldResources(ResourceType resource) = 0;
             
 
     };

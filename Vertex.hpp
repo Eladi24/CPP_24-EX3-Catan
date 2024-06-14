@@ -26,10 +26,11 @@ namespace ariel
             void addNeighbor(Vertex v);
             void buildSettlement(Player* p);
             void buildCity(Player* p);
-            void yieldResources();
+            void yieldResources(ResourceType resource);
             bool isOccupied() const { return this->_isOccupied; }
             Structure* getStructure() const { return this->_structure; }
             int getId() const { return this->_id; }
+            friend ostream& operator<<(ostream& os, const Vertex& vertex);
     };
 }
 

@@ -1,6 +1,7 @@
 #ifndef _DEVCARD_HPP_
 #define _DEVCARD_HPP_
 
+#include "Player.hpp"
 #include <string>
 using namespace std;
 
@@ -25,18 +26,23 @@ namespace ariel
     class DevCard
     {
     private:
-        CardType type;
-        string description;
-        int value;
-        bool used;
+        CardType _type;
+        int _value;
+        bool _used;
         
+    protected:
+        Player* _owner;
     public:
-        DevCard(CardType type, string description, int value): type(type), description(description), value(value), used(false) {}
+        DevCard(CardType type, int value): _type(type), _value(value), _used(false), _owner(nullptr) {}
         virtual ~DevCard() = default;
         virtual void activate() =0;
-        bool isUsed() { return used; }
-        void setUsed(bool used) { this->used = used; }
-        CardType getCardType() { return type ;}
+        bool isUsed() { return _used; }
+        void setUsed(bool used) { this->_used = used; }
+        CardType getCardType() { return _type ;}
+        int getValue() { return _value; }
+        Player* getOwner() { return _owner; }
+        void setOwner(Player* owner) { this->_owner = owner; }
+        
     };
 } // namespace ariel
 

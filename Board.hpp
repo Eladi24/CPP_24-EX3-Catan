@@ -1,9 +1,11 @@
 #ifndef _BOARD_HPP_
 #define _BOARD_HPP_
 
+#include <iostream>
 #include <unordered_map>
 #include <utility>
 #include <memory>
+#include <iomanip>
 #include "Point.hpp"
 #include "Vertex.hpp"
 #include "Trail.hpp"
@@ -28,6 +30,8 @@ namespace ariel
         // A map of points to hexagons
         map<Point, Hexagon> _hexagonsMap;
 
+        void drawHexagon(int row, int col, const Hexagon& hexagon) const;
+
     public:
         Board(); // constructor
         ~Board(); // destructor
@@ -35,7 +39,14 @@ namespace ariel
 
         const Hexagon& getHexagon(int q, int r) const { return this->_hexagonGrid[q][r]; }
         
+        shared_ptr<Vertex> getVertex(vector<LandType>& places, vector<int>& placesNum) const;
+        map<Point, Hexagon> getHexagonsMap() const { return this->_hexagonsMap; }
+        
         void printBoard();
+        bool vertexMatches(shared_ptr<Vertex> v, vector<LandType>& places, vector<int>& placesNum) const;
+        vector<shared_ptr<Vertex>> getNeighborVertices(shared_ptr<Vertex> v) const;
+        bool hasRoad(shared_ptr<Vertex> v1, shared_ptr<Vertex> v2) const;
+        shared_ptr<Trail> getTrail(shared_ptr<Vertex> v1, shared_ptr<Vertex> v2) const;
     };
 } // namespace ariel
 

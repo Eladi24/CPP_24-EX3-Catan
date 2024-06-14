@@ -17,7 +17,7 @@ namespace ariel
             Settlement(Player* owner, bool isCity): Structure(owner), _isCity(isCity) {}
             ~Settlement();
             
-            void yieldResources();
+            void yieldResources(ResourceType resource) override;
             
             
 

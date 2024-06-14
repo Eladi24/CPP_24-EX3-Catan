@@ -54,17 +54,25 @@ void Vertex::buildCity(Player* p)
 }
 
 // Yield resources from the vertex
-void Vertex::yieldResources()
+void Vertex::yieldResources(ResourceType resource)
 {
     if (this->_isOccupied)
     {
-        this->_structure->yieldResources();
+        this->_structure->yieldResources(resource);
     }
     else
     {
         throw "Cannot yield resources from an unoccupied vertex";
     }
 }
+
+// Overload the << operator
+ostream& ariel::operator<<(ostream& os, const Vertex& vertex)
+{
+    os << "V" << vertex._id;
+    return os;
+}
+
 
 
 

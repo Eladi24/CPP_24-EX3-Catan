@@ -7,6 +7,8 @@
 #include "Hexagon.hpp"
 #include "Road.hpp"
 #include "DevCard.hpp"
+#include "Cashbox.hpp"
+#include "Board.hpp"
 
 namespace ariel
 {
@@ -24,11 +26,11 @@ namespace ariel
     private:
         const string _name;
         map<ResourceType, uint> _resources;
-        map<Vertex*, Structure*> _structures;
+        map<shared_ptr<Vertex>, Structure*> _structures;
         
-        map <Trail, Road> _roads;
+        map <shared_ptr<Trail>, Road*> _roads;
         int _victoryPoints;
-        map<DevCard*, uint> _devCards;
+        map<shared_ptr<DevCard>, uint> _devCards;
         Die _die1;
         Die _die2;
         bool _isTurn;
@@ -38,18 +40,30 @@ namespace ariel
     public:
         Player(const string name): _name(name), _victoryPoints(0), _isTurn(false) {}
         ~Player();
-        void placeSettelemnt(vector<string> places, vector<int> placesNum, Board board);
-        void placeRoad(vector<string> places, vector<int> placesNum, Board board);
-        void rollDice();
+        void placeSettelemnt(vector<LandType> places, vector<int> placesNum, Board& board);
+        void placeRoad(vector<LandType> places, vector<int> placesNum, Board& board);
+        int rollDice();
         void endTurn();
         bool trade(Player pToTrade, ResourceType resourceToGive, ResourceType resourceToGet, int amountToGive, int amountToGet);
         bool reviewTradeRequest(TradeRequest tradeRequest);
-        void buyDevelopmentCard();
+        void buyDevelopmentCard(Cashbox& cashbox);
         void printPoints();
         string getName() const { return this->_name; }
+        int getVictoryPoints() const { return this->_victoryPoints; }
+        void addVictoryPoints(int points);
+        void removeVictoryPoints(int points);
         void addResource(ResourceType resource, int amount);
         void removeResource(ResourceType resource, int amount);
         uint getResourceAmount(ResourceType resource) const { return this->_resources.at(resource); }
+        void setTurn(bool isTurn) { this->_isTurn = isTurn; }
+        bool canPlaceSettlement(shared_ptr<Vertex> v);
+        bool canPlaceRoad(shared_ptr<Vertex> v1 , shared_ptr<Vertex> v2);
+        bool canPlaceCity(shared_ptr<Vertex> v);
+        bool canAffordSettlement();
+        bool canAffordRoad();
+        bool canAffordCity();
+        void deductResourcesForSettlement();
+        void deductResourcesForRoad();
 
     };
 } // namespace ariel

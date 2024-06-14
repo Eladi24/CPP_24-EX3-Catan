@@ -9,7 +9,7 @@ namespace ariel
     class VictoryPointCard: public DevCard
     {
     public:
-        VictoryPointCard(): DevCard(VICTORY_POINT, "Victory Point", 1) {}
+        VictoryPointCard(): DevCard(VICTORY_POINT,  1) {}
         ~VictoryPointCard();
         void activate() override;
     };

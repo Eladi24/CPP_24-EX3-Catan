@@ -16,7 +16,7 @@ namespace ariel
         public:
             City(Player* owner): Structure(owner) {}
             ~City();
-            void yieldResources() override;
+            void yieldResources(ResourceType resource) override;
             
     };
 }

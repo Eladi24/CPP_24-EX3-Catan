@@ -2,7 +2,9 @@
 #include <algorithm> // Add this line to include the <algorithm> header
 
 #include "Cashbox.hpp"
-
+#include "KnightCard.hpp"
+#include "ProgressCard.hpp"
+#include "VictoryPointCard.hpp"
 using namespace std;
 using namespace ariel;
 
@@ -15,7 +17,7 @@ Cashbox::Cashbox()
 // Destructor
 Cashbox::~Cashbox()
 {
-    // Nothing to do here
+    
 }
 
 // Cashbox initialization
@@ -24,38 +26,38 @@ void Cashbox::init()
      // Initialize the development cards
     for (int i = 0; i < 14; i++)
     {
-        DevCard KNIGHT (CardType::KNIGHT, "Knight", "Move the robber and steal a resource card from another player", 3);
-        devCards.push_back(KNIGHT);
+        shared_ptr<DevCard> knight = make_shared<KnightCard>();
+        devCards.push_back(knight);
     }
 
     for (int i = 0; i < 5; i++)
     {
-        DevCard VICTORY_POINT (CardType::VICTORY_POINT, "Victory Point", "Gain 1 victory point", 1);
-        devCards.push_back(VICTORY_POINT);
+        shared_ptr<DevCard> victoryPoint = make_shared<VictoryPointCard>();
+        devCards.push_back(victoryPoint);
     }
 
     for (int i = 0; i < 2; i++)
     {
-        DevCard roadBuilding (ROAD_BUILDING, "Road Building", "Build 2 roads", 2);
+        shared_ptr<DevCard> roadBuilding = make_shared<ProgressCard>(CardType::PROGRESS, 2, SubCardType::ROAD_BUILDING);
         devCards.push_back(roadBuilding);
     }
 
     for (int i = 0; i < 2; i++)
     {
-        DevCard yearOfPlenty (YEAR_OF_PLENTY, "Year of Plenty", "Gain 2 resource cards of your choice", 2);
+        shared_ptr<DevCard> yearOfPlenty = make_shared<ProgressCard>(CardType::PROGRESS, 2, SubCardType::YEAR_OF_PLENTY);
         devCards.push_back(yearOfPlenty);
     }
 
     for (int i = 0; i < 2; i++)
     {
-        DevCard monopoly (MONOPOLY, "Monopoly", "Take all resource cards of a single type from all players", 2);
+        shared_ptr<DevCard> monopoly = make_shared<ProgressCard>(CardType::PROGRESS, 2, SubCardType::MONOPOLY);
         devCards.push_back(monopoly);
     }
 
-    DevCard largestArmy (LARGEST_ARMY, "Largest Army", "Gain 2 victory points", 2);
+    shared_ptr<DevCard> largestArmy = make_shared<ProgressCard>(CardType::PROGRESS, 2, SubCardType::LARGEST_ARMY);
     devCards.push_back(largestArmy);
 
-    DevCard longestRoad (LONGEST_ROAD, "Longest Road", "Gain 2 victory points", 2);
+    shared_ptr<DevCard> longestRoad = make_shared<ProgressCard>(CardType::PROGRESS, 2, SubCardType::LONGEST_ROAD); 
     devCards.push_back(longestRoad);
 
     // Initialize the resource cards
@@ -102,16 +104,17 @@ void Cashbox::shuffleResourceCards()
     random_shuffle(grainCards.begin(), grainCards.end());
 }
 
-DevCard Cashbox::drawDevCard()
+shared_ptr<DevCard> Cashbox::drawDevCard()
 {
     if (devCards.empty())
     {
         throw "No development cards left in the deck";
     }
     // Draw a development card
-    DevCard card = devCards.back();
-    // Remove the card from the deck
+    shared_ptr<DevCard> card = devCards.back();
+    // Remove the card from the deck, needs to be deleted by the caller
     devCards.pop_back();
+    
     return card;
 }
 
@@ -167,7 +170,7 @@ ResourceCard Cashbox::drawResourceCard(ResourceType type)
     return card;
 }
 
-void Cashbox::returnDevCard(DevCard card)
+void Cashbox::returnDevCard(shared_ptr<DevCard> card)
 {
     // Return a development card to the deck
     devCards.push_back(card);
@@ -229,6 +232,24 @@ int Cashbox::getNumResourceCards(ResourceType type)
     }
 }
 
+bool Cashbox::canAffordDevCard(Player& p)
+{
+    if (p.getResourceAmount(Wool) >= 1 && p.getResourceAmount(Ore) >= 1 && p.getResourceAmount(Grain) >= 1)
+    {
+        return true;
+    }
+    return false;
+}
+
+
+CardType Cashbox::peekDeck()
+{
+    if (devCards.empty())
+    {
+        throw "No development cards left in the deck";
+    }
+    return devCards.back()->getCardType();
+}
 
 
 

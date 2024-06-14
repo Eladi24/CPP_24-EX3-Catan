@@ -8,9 +8,10 @@ using namespace std;
 using namespace ariel;
 
 // Constructor
-Hexagon::Hexagon(LandType landType, int value, Point &center, int id): _landType(landType), _value(value), _center(center), id(id) {
-    
-    this->initResources(); 
+Hexagon::Hexagon(LandType landType, int value, Point &center, int id) : _landType(landType), _value(value), _center(center), id(id)
+{
+
+    this->initResources();
 }
 
 // Destructor
@@ -44,12 +45,12 @@ void Hexagon::initResources()
     }
 }
 
-
 // Initialize the vertices of the hexagon
-void Hexagon::initHexagon(map<Point, shared_ptr<Vertex>>& verticesMap, map<pair<shared_ptr<Vertex>, shared_ptr<Vertex>>, shared_ptr<Trail>>& edgesMap)
+void Hexagon::initHexagon(map<Point, shared_ptr<Vertex>> &verticesMap, map<pair<shared_ptr<Vertex>, shared_ptr<Vertex>>, shared_ptr<Trail>> &edgesMap)
 {
-   // Create or reuse vertices
-    auto createVertex = [&](double q, double r, int id) {
+    // Create or reuse vertices
+    auto createVertex = [&](double q, double r, int id)
+    {
         Point p = Point(q, r);
         if (verticesMap.find(p) == verticesMap.end())
         {
@@ -69,9 +70,10 @@ void Hexagon::initHexagon(map<Point, shared_ptr<Vertex>>& verticesMap, map<pair<
     this->_verticesMap[BOTTOM] = bottom;
     this->_verticesMap[BOTTOM_LEFT] = bottomLeft;
     this->_verticesMap[TOP_LEFT] = topLeft;
-    
+
     // Create or reuse edges
-    auto createEdge = [&](shared_ptr<Vertex> v1, shared_ptr<Vertex> v2) {
+    auto createEdge = [&](shared_ptr<Vertex> v1, shared_ptr<Vertex> v2)
+    {
         pair<shared_ptr<Vertex>, shared_ptr<Vertex>> key = {v1, v2};
         if (edgesMap.find(key) == edgesMap.end())
         {
@@ -85,6 +87,40 @@ void Hexagon::initHexagon(map<Point, shared_ptr<Vertex>>& verticesMap, map<pair<
     this->_edgesMap[BOTTOM_RIGHT_EDGE] = createEdge(bottomRight, bottom);
     this->_edgesMap[BOTTOM_LEFT_EDGE] = createEdge(bottom, bottomLeft);
     this->_edgesMap[LEFT_EDGE] = createEdge(bottomLeft, topLeft);
-    this->_edgesMap[TOP_LEFT_EDGE] = createEdge(topLeft, top); 
+    this->_edgesMap[TOP_LEFT_EDGE] = createEdge(topLeft, top);
 }
 
+
+ostream &ariel::operator<<(ostream &os, const Hexagon &hexagon)
+{
+    // Print the edges of the hexagon, land type and value
+    switch (hexagon._landType)
+    {
+    case Forest:
+        os << "Forest ";
+        break;
+    case Hills:
+        os << "Hills ";
+        break;
+    case Mountains:
+        os << "Mountains ";
+        break;
+    case Pasture:
+        os << "Pasture ";
+        break;
+    case Field:
+        os << "Field ";
+        break;
+    case Desert:
+        os << "Desert ";
+        break;
+    default:
+        break;
+    }
+
+    os << hexagon._value << " ";
+    for (auto const &edge : hexagon._edgesMap)
+    {
+        os << *edge.second;
+    }
+}

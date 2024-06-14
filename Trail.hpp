@@ -17,19 +17,22 @@ namespace ariel
         private:
             const Player* _owner;
             bool _hasRoad;
-            Vertex _start;
-            Vertex _end;
+            shared_ptr<Vertex> _start;
+            shared_ptr<Vertex> _end;
+            Road* _road;
         
         public:
-            Trail(const Player* owner, Vertex start, Vertex end);
-            Trail(Vertex start, Vertex end): _owner(nullptr), _start(start), _end(end), _hasRoad(false) {}
-            Trail(std::shared_ptr<Vertex> start, std::shared_ptr<Vertex> end): _owner(nullptr), _start(*start), _end(*end), _hasRoad(false) {}
+            Trail(const Player* owner, shared_ptr<Vertex>  start, shared_ptr<Vertex>  end): _owner(owner), _start(start), _end(end), _hasRoad(false), _road(nullptr) {}
+            Trail(shared_ptr<Vertex>  start, shared_ptr<Vertex>  end): _owner(nullptr), _start(start), _end(end), _hasRoad(false), _road(nullptr) {}
+            
             ~Trail();
             const Player* getOwner() const { return this->_owner; }
             bool hasRoad() const { return this->_hasRoad; }
-            Vertex getStart() const { return this->_start; };
-            Vertex getEnd() const { return this->_end; };
+            const shared_ptr<Vertex>& getStart() const { return this->_start; };
+            const shared_ptr<Vertex>& getEnd() const { return this->_end; };
             void setRoad(const Player* owner);
+            friend std::ostream& operator<<(std::ostream& os, const Trail& trail);
+            Road* getRoad() const { return this->_road; }
            
     };
 }

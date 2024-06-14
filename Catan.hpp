@@ -4,8 +4,9 @@
 #include <string>
 #include <vector>
 #include <map>
-
-
+#include "Die.hpp"
+#include "Cashbox.hpp"
+#include "Board.hpp"
 
 namespace ariel
 {
@@ -17,8 +18,14 @@ namespace ariel
         Player _p3;
         Board _board;
         Cashbox _cashbox;
-        int _turnCounter;
+        Die _die1;
+        Die _die2;
+        int _turnCounter; 
         int _currentPlayerIndex;
+        int roundCounter;
+        
+        Player& checkWinner();
+
 
         enum GamePhase
         {
@@ -28,13 +35,19 @@ namespace ariel
         }_gamePhase;    
         
     public:
-        Catan(Player p1, Player p2, Player p3);
+        Catan(Player p1, Player p2, Player p3): _p1(p1), _p2(p2), _p3(p3), _board(), _cashbox(), _turnCounter(0), _currentPlayerIndex(0), roundCounter(0), _gamePhase(SETUP) {}
         ~Catan();
+        
         void ChooseStartingPlayer();
-        Board getBoard();
+        Board& getBoard() { return _board; }
+        Cashbox& getCashbox() { return _cashbox; }
         void printWinner();
-        void checkWinner();
         void changeTurn();
+        void yieldResources(int diceRoll);
+        
+        
+
+
     };
 } // namespace ariel
 

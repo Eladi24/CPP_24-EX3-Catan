@@ -13,7 +13,7 @@ namespace ariel
             SubCardType _subType;
 
     public:
-        ProgressCard(CardType type, string name, int cost, SubCardType subType): DevCard(type, name, cost), _subType(subType) {}
+        ProgressCard(CardType type, int cost, SubCardType subType): DevCard(type, cost), _subType(subType) {}
         ~ProgressCard();
         void activate() override;
     };

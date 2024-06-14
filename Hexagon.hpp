@@ -79,9 +79,10 @@ namespace ariel
             void initHexagon(map<Point, shared_ptr<Vertex>>& verticesMap, map<pair<shared_ptr<Vertex>, shared_ptr<Vertex>>, shared_ptr<Trail>>& edgesMap);
             int getId() const { return id;}
             Point getCenter() const { return _center;}
-            map<VertexLocation, shared_ptr<Vertex>> getVerticesMap() const { return _verticesMap;}
-            map<TrailLocation, shared_ptr<Trail>> getEdgesMap() const { return _edgesMap;}
-            void printHexagon() const;
+            const map<VertexLocation, shared_ptr<Vertex>> getVerticesMap() const { return _verticesMap;}
+            const map<TrailLocation, shared_ptr<Trail>> getEdgesMap() const { return _edgesMap;}
+            friend ostream& operator<<(ostream& os, const Hexagon& hexagon);
+            
     };
 
 }
