@@ -1,7 +1,6 @@
 #ifndef _POINT_HPP_
 #define _POINT_HPP_
-
-
+#include <iostream>
 #include <cmath>
 using namespace std;
 namespace ariel

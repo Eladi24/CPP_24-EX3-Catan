@@ -6,8 +6,9 @@ CFLAGS = -Wall -g -std=c++11
 # Valgrind flags
 VALGRIND_FLAGS = --leak-check=full --show-leak-kinds=all --error-exitcode=99
 # Catan library source files
-LIB_SRC = Board.cpp City.cpp Hexagon.cpp Player.cpp Point.cpp Settlement.cpp \
-		Structure.cpp Trail.cpp Vertex.cpp
+LIB_SRC = Board.cpp Cashbox.cpp Catan.cpp City.cpp Hexagon.cpp Player.cpp Point.cpp Settlement.cpp \
+		Structure.cpp Trail.cpp Vertex.cpp Types.cpp KnightCard.cpp ProgressCard.cpp \
+		VictoryPointCard.cpp
 
 # Catan library object files
 LIB_OBJ = $(subst .cpp,.o,$(LIB_SRC))
@@ -27,7 +28,7 @@ Main: Main.o $(LIB)
 	$(CC) $(CFLAGS) -o Main Main.o $(LIB)
 
 %.o: %.cpp $(LIB_HDR)
-	$(CC) $(CFLAGS) --compile $< -o $@
+	$(CC) $(CFLAGS) -c$< -o $@
 
 $(LIB): $(LIB_OBJ)
 	ar rcs $(LIB) $(LIB_OBJ)

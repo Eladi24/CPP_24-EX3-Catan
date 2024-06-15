@@ -3,7 +3,9 @@
 
 #include <iostream>
 #include <vector>
+#include "Types.hpp"
 #include "Cashbox.hpp"
+#include "Player.hpp"
 
 using namespace std;
 

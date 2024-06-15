@@ -22,23 +22,23 @@ void Hexagon::initResources()
 {
     switch (this->_landType)
     {
-    case Forest:
-        this->_resourceType = Wood;
+    case LandType::Forest:
+        this->_resourceType = ResourceType::Wood;
         break;
-    case Hills:
-        this->_resourceType = Brick;
+    case LandType::Hills:
+        this->_resourceType = ResourceType::Brick;
         break;
-    case Mountains:
-        this->_resourceType = Ore;
+    case LandType::Mountains:
+        this->_resourceType = ResourceType::Ore;
         break;
-    case Pasture:
-        this->_resourceType = Wool;
+    case LandType::Pasture:
+        this->_resourceType = ResourceType::Wool;
         break;
-    case Field:
-        this->_resourceType = Grain;
+    case LandType::Field:
+        this->_resourceType = ResourceType::Grain;
         break;
-    case Desert:
-        this->_resourceType = None;
+    case LandType::Desert:
+        this->_resourceType = ResourceType::None;
         break;
     default:
         break;
@@ -71,6 +71,13 @@ void Hexagon::initHexagon(map<Point, shared_ptr<Vertex>> &verticesMap, map<pair<
     this->_verticesMap[BOTTOM_LEFT] = bottomLeft;
     this->_verticesMap[TOP_LEFT] = topLeft;
 
+    top->addHexagon(shared_from_this());
+    topRight->addHexagon(shared_from_this());
+    bottomRight->addHexagon(shared_from_this());
+    bottom->addHexagon(shared_from_this());
+    bottomLeft->addHexagon(shared_from_this());
+    topLeft->addHexagon(shared_from_this());
+
     // Create or reuse edges
     auto createEdge = [&](shared_ptr<Vertex> v1, shared_ptr<Vertex> v2)
     {
@@ -82,45 +89,64 @@ void Hexagon::initHexagon(map<Point, shared_ptr<Vertex>> &verticesMap, map<pair<
         return edgesMap[key];
     };
 
-    this->_edgesMap[TOP_RIGHT_EDGE] = createEdge(top, topRight);
-    this->_edgesMap[RIGHT_EDGE] = createEdge(topRight, bottomRight);
-    this->_edgesMap[BOTTOM_RIGHT_EDGE] = createEdge(bottomRight, bottom);
-    this->_edgesMap[BOTTOM_LEFT_EDGE] = createEdge(bottom, bottomLeft);
-    this->_edgesMap[LEFT_EDGE] = createEdge(bottomLeft, topLeft);
-    this->_edgesMap[TOP_LEFT_EDGE] = createEdge(topLeft, top);
+    auto topRightEdge = createEdge(top, topRight);
+    auto rightEdge = createEdge(topRight, bottomRight);
+    auto bottomRightEdge = createEdge(bottomRight, bottom);
+    auto bottomLeftEdge = createEdge(bottom, bottomLeft);
+    auto leftEdge = createEdge(bottomLeft, topLeft);
+    auto topLeftEdge = createEdge(topLeft, top);
+
+    this->_edgesMap[TOP_RIGHT_EDGE] = topRightEdge;
+    this->_edgesMap[RIGHT_EDGE] = rightEdge;
+    this->_edgesMap[BOTTOM_RIGHT_EDGE] = bottomRightEdge;
+    this->_edgesMap[BOTTOM_LEFT_EDGE] = bottomLeftEdge;
+    this->_edgesMap[LEFT_EDGE] = leftEdge;
+    this->_edgesMap[TOP_LEFT_EDGE] = topLeftEdge;
+    top->addTrail(topRightEdge);
+    top->addTrail(topLeftEdge);
+    topRight->addTrail(topRightEdge);
+    topRight->addTrail(rightEdge);
+    bottomRight->addTrail(rightEdge);
+    bottomRight->addTrail(bottomRightEdge);
+    bottom->addTrail(bottomRightEdge);
+    bottom->addTrail(bottomLeftEdge);
+    bottomLeft->addTrail(bottomLeftEdge);
+    bottomLeft->addTrail(leftEdge);
+    topLeft->addTrail(leftEdge);
+    topLeft->addTrail(topLeftEdge);
 }
 
 
-ostream &ariel::operator<<(ostream &os, const Hexagon &hexagon)
-{
-    // Print the edges of the hexagon, land type and value
-    switch (hexagon._landType)
-    {
-    case Forest:
-        os << "Forest ";
-        break;
-    case Hills:
-        os << "Hills ";
-        break;
-    case Mountains:
-        os << "Mountains ";
-        break;
-    case Pasture:
-        os << "Pasture ";
-        break;
-    case Field:
-        os << "Field ";
-        break;
-    case Desert:
-        os << "Desert ";
-        break;
-    default:
-        break;
-    }
+// ostream &ariel::operator<<(ostream &os, const Hexagon &hexagon)
+// {
+//     // Print the edges of the hexagon, land type and value
+//     switch (hexagon._landType)
+//     {
+//     case Forest:
+//         os << "Forest ";
+//         break;
+//     case Hills:
+//         os << "Hills ";
+//         break;
+//     case Mountains:
+//         os << "Mountains ";
+//         break;
+//     case Pasture:
+//         os << "Pasture ";
+//         break;
+//     case Field:
+//         os << "Field ";
+//         break;
+//     case Desert:
+//         os << "Desert ";
+//         break;
+//     default:
+//         break;
+//     }
 
-    os << hexagon._value << " ";
-    for (auto const &edge : hexagon._edgesMap)
-    {
-        os << *edge.second;
-    }
-}
+//     os << hexagon._value << " ";
+//     for (auto const &edge : hexagon._edgesMap)
+//     {
+//         os << *edge.second;
+//     }
+// }

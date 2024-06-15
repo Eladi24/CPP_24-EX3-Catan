@@ -6,10 +6,10 @@
 #include <utility>
 #include <memory>
 #include <iomanip>
-#include "Point.hpp"
-#include "Vertex.hpp"
-#include "Trail.hpp"
+
 #include "Hexagon.hpp"
+#include "Player.hpp"
+#include "Types.hpp"
 
 
 
@@ -17,6 +17,9 @@ using namespace std;
 
 namespace ariel
 {
+    class Player;
+    class Hexagon;
+
     class Board
     {
     private:
@@ -47,6 +50,7 @@ namespace ariel
         vector<shared_ptr<Vertex>> getNeighborVertices(shared_ptr<Vertex> v) const;
         bool hasRoad(shared_ptr<Vertex> v1, shared_ptr<Vertex> v2) const;
         shared_ptr<Trail> getTrail(shared_ptr<Vertex> v1, shared_ptr<Vertex> v2) const;
+        void placeRoad(shared_ptr<Vertex> v1, shared_ptr<Vertex> v2, const Player* owner);
     };
 } // namespace ariel
 

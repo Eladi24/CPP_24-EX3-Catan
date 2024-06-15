@@ -4,9 +4,9 @@
 #include <map>
 #include <string>
 #include <vector>
-#include "Hexagon.hpp"
-#include "Player.hpp"
+#include <memory>
 #include "DevCard.hpp"
+#include "Player.hpp"
 
 
 
@@ -14,11 +14,8 @@ using namespace std;
 
 namespace ariel
 {
-    typedef struct ResourceCard
-    {
-        ResourceType type;
-        bool available;
-    } ResourceCard;
+    class Player;
+    class DevCard;
 
     class Cashbox
     {

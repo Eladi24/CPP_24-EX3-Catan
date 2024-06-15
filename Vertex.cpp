@@ -4,10 +4,7 @@
 #include "Vertex.hpp"
 #include "Settlement.hpp"
 #include "City.hpp"
-#include "Player.hpp"
 
-
-using namespace std;
 using namespace ariel;
 
 
@@ -66,12 +63,6 @@ void Vertex::yieldResources(ResourceType resource)
     }
 }
 
-// Overload the << operator
-ostream& ariel::operator<<(ostream& os, const Vertex& vertex)
-{
-    os << "V" << vertex._id;
-    return os;
-}
 
 
 

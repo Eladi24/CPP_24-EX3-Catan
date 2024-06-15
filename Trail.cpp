@@ -25,10 +25,5 @@ void Trail::setRoad(const Player* owner)
 }
 
 
-ostream& ariel::operator<<(ostream& os, const Trail& trail)
-{
-    os << trail._start << " -> " << trail._end;
-    return os;
-}
 
 

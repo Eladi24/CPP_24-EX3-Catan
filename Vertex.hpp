@@ -1,14 +1,19 @@
 #ifndef _VERTEX_HPP_
 #define _VERTEX_HPP_
-
 #include "Point.hpp"
+#include "Types.hpp"
+#include "Hexagon.hpp"
 #include "Structure.hpp"
+#include "Player.hpp"
+
 
 using namespace std;
 
 namespace ariel
 {
-
+    class Structure;
+    class Hexagon;
+    
     class Vertex: public Point
     {
         private:
@@ -16,6 +21,8 @@ namespace ariel
             Structure* _structure;
             bool _isOccupied;
             int _id;
+            set<shared_ptr<Hexagon>> _hexagons;
+            set<shared_ptr<Trail>> _trails;
             
         public:
             static constexpr double squareRoot3Div2 = 0.86602540378;
@@ -30,7 +37,11 @@ namespace ariel
             bool isOccupied() const { return this->_isOccupied; }
             Structure* getStructure() const { return this->_structure; }
             int getId() const { return this->_id; }
-            friend ostream& operator<<(ostream& os, const Vertex& vertex);
+            
+            set<shared_ptr<Hexagon>> getHexagons() const { return this->_hexagons; }
+            set<shared_ptr<Trail>> getTrails() const { return this->_trails; }
+            void addHexagon(shared_ptr<Hexagon> hex) { this->_hexagons.insert(hex); }
+            void addTrail(shared_ptr<Trail> trail) { this->_trails.insert(trail); }
     };
 }
 

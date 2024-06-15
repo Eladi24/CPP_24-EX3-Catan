@@ -1,26 +1,21 @@
 #ifndef _PLAYER_HPP_
 #define _PLAYER_HPP_
-
 #include "Die.hpp"
+#include "DevCard.hpp"
+#include "Structure.hpp"
 #include "Vertex.hpp"
 #include "Trail.hpp"
-#include "Hexagon.hpp"
 #include "Road.hpp"
-#include "DevCard.hpp"
 #include "Cashbox.hpp"
 #include "Board.hpp"
 
 namespace ariel
 {
+    class DevCard;
+    class Structure;
     class Board;
-    typedef struct TradeRequest
-        {
-            ResourceType resourceToGive;
-            ResourceType resourceToGet;
-            int amountToGive;
-            int amountToGet;
-        } TradeRequest;
-   
+    class Cashbox;
+
     class Player
     {
     private:

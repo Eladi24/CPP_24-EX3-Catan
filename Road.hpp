@@ -1,6 +1,6 @@
 #ifndef _ROAD_HPP_
 #define _ROAD_HPP_
-
+#include "Types.hpp"
 
 namespace ariel
 {

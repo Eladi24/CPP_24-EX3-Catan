@@ -1,13 +1,8 @@
 #ifndef _CATAN_HPP_
 #define _CATAN_HPP_
-#include <iostream>
-#include <string>
-#include <vector>
-#include <map>
-#include "Die.hpp"
-#include "Cashbox.hpp"
-#include "Board.hpp"
 
+#include "Types.hpp"
+#include "Player.hpp"
 namespace ariel
 {
     class Catan

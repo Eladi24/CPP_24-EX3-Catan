@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include "Cashbox.hpp"
 #include "Player.hpp"
 
 
@@ -228,23 +229,24 @@ bool Player::canPlaceCity(shared_ptr<Vertex> v) {
 }
 
 bool Player::canAffordSettlement() {
-    return this->_resources[Brick] >= 1 && this->_resources[Wood] >= 1 && this->_resources[Wool] >= 1 && this->_resources[Grain] >= 1;
+    return this->_resources[ResourceType::Brick] >= 1 && this->_resources[ResourceType::Wood] >= 1 
+    && this->_resources[ResourceType::Wool] >= 1 && this->_resources[ResourceType::Grain] >= 1;
 }
 
 bool Player::canAffordRoad() {
-    return this->_resources[Brick] >= 1 && this->_resources[Wood] >= 1;
+    return this->_resources[ResourceType::Brick] >= 1 && this->_resources[ResourceType::Wood] >= 1;
 }
 
 
 void Player::deductResourcesForSettlement() {
-    this->removeResource(Brick, 1);
-    this->removeResource(Wood, 1);
-    this->removeResource(Wool, 1);
-    this->removeResource(Grain, 1);
+    this->removeResource(ResourceType::Brick, 1);
+    this->removeResource(ResourceType::Wood, 1);
+    this->removeResource(ResourceType::Wool, 1);
+    this->removeResource(ResourceType::Grain, 1);
 }
 
 void Player::deductResourcesForRoad() {
-    this->removeResource(Brick, 1);
-    this->removeResource(Wood, 1);
+    this->removeResource(ResourceType::Brick, 1);
+    this->removeResource(ResourceType::Wood, 1);
 }
 

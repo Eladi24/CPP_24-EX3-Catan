@@ -9,10 +9,10 @@ using namespace std;
 using namespace ariel;
 
 // Constructor
-Cashbox::Cashbox()
-{
-    this->init();
-}
+// Cashbox::Cashbox()
+// {
+//     this->init();
+// }
 
 // Destructor
 Cashbox::~Cashbox()
@@ -65,23 +65,23 @@ void Cashbox::init()
     for (int i = 0; i < 19; i++)
     {
         ResourceCard wood;
-        wood.type = Wood;
+        wood.type = ResourceType::Wood;
         wood.available = true;
         woodCards.push_back(wood);
         ResourceCard brick;
-        brick.type = Brick;
+        brick.type = ResourceType::Brick;
         brick.available = true;
         brickCards.push_back(brick);
         ResourceCard ore;
-        ore.type = Ore;
+        ore.type = ResourceType::Ore;
         ore.available = true;
         oreCards.push_back(ore);
         ResourceCard wool;
-        wool.type = Wool;
+        wool.type = ResourceType::Wool;
         wool.available = true;
         woolCards.push_back(wool);
         ResourceCard grain;
-        grain.type = Grain;
+        grain.type = ResourceType::Grain;
         grain.available = true;
         grainCards.push_back(grain);
 
@@ -234,7 +234,7 @@ int Cashbox::getNumResourceCards(ResourceType type)
 
 bool Cashbox::canAffordDevCard(Player& p)
 {
-    if (p.getResourceAmount(Wool) >= 1 && p.getResourceAmount(Ore) >= 1 && p.getResourceAmount(Grain) >= 1)
+    if (p.getResourceAmount(ResourceType::Wool) >= 1 && p.getResourceAmount(ResourceType::Ore) >= 1 && p.getResourceAmount(ResourceType::Grain) >= 1)
     {
         return true;
     }

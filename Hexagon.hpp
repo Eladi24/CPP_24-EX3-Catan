@@ -4,34 +4,16 @@
 #include <memory>
 #include <set>
 #include <map>
-#include "Point.hpp"
+#include "Types.hpp"
 #include "Vertex.hpp"
 #include "Trail.hpp"
-
 
 using namespace std;
 namespace ariel
 {
-    enum LandType
-    {
-        Forest,
-        Hills,
-        Mountains,
-        Pasture,
-        Field,
-        Desert,
-        NONE
-    };
-
-    enum ResourceType
-    {
-        Wood,
-        Brick,
-        Ore,
-        Wool,
-        Grain,
-        None
-    };
+    
+    class Vertex;
+    class Trail;
 
     enum VertexLocation
     {
@@ -53,7 +35,7 @@ namespace ariel
         TOP_LEFT_EDGE
     };
 
-    class Hexagon
+    class Hexagon : public enable_shared_from_this<Hexagon>
     {
         private:
             LandType _landType;
@@ -69,7 +51,7 @@ namespace ariel
 
         public:
             Hexagon(LandType landType, int value, Point &center, int id);
-            Hexagon(): _landType(LandType::NONE), _value(0), _center(Point(0,0)), id(0) {}
+            Hexagon(): _landType(LandType::None), _value(0), _center(Point(0,0)), id(0) {}
             ~Hexagon();
             void initResources();
             ResourceType getResourceType() const { return _resourceType;}
@@ -81,7 +63,7 @@ namespace ariel
             Point getCenter() const { return _center;}
             const map<VertexLocation, shared_ptr<Vertex>> getVerticesMap() const { return _verticesMap;}
             const map<TrailLocation, shared_ptr<Trail>> getEdgesMap() const { return _edgesMap;}
-            friend ostream& operator<<(ostream& os, const Hexagon& hexagon);
+            
             
     };
 

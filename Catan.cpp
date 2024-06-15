@@ -93,6 +93,8 @@ void Catan::yieldResources(int diceRoll)
                 if (vertex->getStructure() != nullptr)
                 {
                     vertex->yieldResources(hex.getResourceType());
+                    // Remove cards from the CashBox
+                    _cashbox.drawResourceCard(hex.getResourceType());
                 }
             }
         }

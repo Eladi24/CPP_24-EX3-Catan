@@ -1,27 +1,14 @@
 #ifndef _DEVCARD_HPP_
 #define _DEVCARD_HPP_
 
-#include "Player.hpp"
 #include <string>
+#include "Types.hpp"
+#include "Player.hpp"
 using namespace std;
 
 namespace ariel
 {
-    enum CardType
-    {
-        KNIGHT,
-        PROGRESS,
-        VICTORY_POINT
-    };
-
-    enum SubCardType
-    {
-        ROAD_BUILDING,
-        YEAR_OF_PLENTY,
-        MONOPOLY,
-        LARGEST_ARMY,
-        LONGEST_ROAD
-    };
+    class Player;
 
     class DevCard
     {

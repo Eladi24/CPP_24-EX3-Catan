@@ -9,7 +9,7 @@ namespace ariel
     class KnightCard: public DevCard
     {
     public:
-        KnightCard(): DevCard(KNIGHT, 3) {}
+        KnightCard(): DevCard(CardType::KNIGHT, 3) {}
         ~KnightCard();
         void activate() override;
     };
