@@ -1,12 +1,11 @@
 #include "Types.hpp"
 
-
 namespace ariel
 {
-    std::ostream& operator<<(std::ostream& os, const LandType& landType)
-{
-    switch (landType)
+    std::ostream &operator<<(std::ostream &os, const LandType &landType)
     {
+        switch (landType)
+        {
         case LandType::Forest:
             os << "Forest";
             break;
@@ -31,14 +30,14 @@ namespace ariel
         case LandType::Sea:
             os << "Sea";
             break;
+        }
+        return os;
     }
-    return os;
-}
 
-std::ostream& operator<<(std::ostream& os, const ResourceType& resourceType)
-{
-    switch (resourceType)
+    std::ostream &operator<<(std::ostream &os, const ResourceType &resourceType)
     {
+        switch (resourceType)
+        {
         case ResourceType::Wood:
             os << "Wood";
             break;
@@ -57,14 +56,14 @@ std::ostream& operator<<(std::ostream& os, const ResourceType& resourceType)
         case ResourceType::None:
             os << "None";
             break;
+        }
+        return os;
     }
-    return os;
-}
 
-std::ostream& operator<<(std::ostream& os, const CardType& cardType)
-{
-    switch (cardType)
+    std::ostream &operator<<(std::ostream &os, const CardType &cardType)
     {
+        switch (cardType)
+        {
         case CardType::KNIGHT:
             os << "Knight";
             break;
@@ -74,7 +73,9 @@ std::ostream& operator<<(std::ostream& os, const CardType& cardType)
         case CardType::PROGRESS:
             os << "Progress";
             break;
+        }
+        return os;
     }
-    return os;
-}
+
+    
 }

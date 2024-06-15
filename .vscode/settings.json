@@ -56,6 +56,11 @@
       "cwd": "/home/eladubuntu/Git Projects/CPP_24-EX3-Catan",
       "binaryPath": "/home/eladubuntu/Git Projects/CPP_24-EX3-Catan/Main",
       "binaryArgs": []
+    },
+    {
+      "cwd": "/home/eladubuntu/Git Projects/CPP_24-EX3-Catan",
+      "binaryPath": "/home/eladubuntu/Git Projects/CPP_24-EX3-Catan/Demo",
+      "binaryArgs": []
     }
   ]
 }

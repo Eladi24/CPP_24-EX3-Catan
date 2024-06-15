@@ -4,6 +4,11 @@ using namespace std;
 using namespace ariel;
 
 
+Catan::~Catan()
+{
+}
+
+
 void Catan::ChooseStartingPlayer()
 {
     int p1Roll = 0;
@@ -15,20 +20,31 @@ void Catan::ChooseStartingPlayer()
         p2Roll = _p2.rollDice();
         p3Roll = _p3.rollDice();
     }
+
+    // _p1.setStartingPhase(false);
+    // _p2.setStartingPhase(false);
+    // _p3.setStartingPhase(false);
+
     if (p1Roll > p2Roll && p1Roll > p3Roll)
     {
         _currentPlayerIndex = 0;
+        
         _p1.setTurn(true);
+        cout << "The starting player is: " << _p1.getName() << endl;
     }
+
     else if (p2Roll > p1Roll && p2Roll > p3Roll)
     {
         _currentPlayerIndex = 1;
         _p2.setTurn(true);
+        cout << "The starting player is: " << _p2.getName() << endl;
     }
+
     else
     {
         _currentPlayerIndex = 2;
         _p3.setTurn(true);
+        cout << "The starting player is: " << _p3.getName() << endl;
     }
 }
 
@@ -86,18 +102,40 @@ void Catan::yieldResources(int diceRoll)
     
     for (const auto& [key, hex] : _board.getHexagonsMap())
     {
-        if (hex.getValue() == diceRoll)
+        if (hex->getValue() == diceRoll)
         {
-            for (const auto& [vertexKey, vertex] : hex.getVerticesMap())
+            for (const auto& [vertexKey, vertex] : hex->getVerticesMap())
             {
                 if (vertex->getStructure() != nullptr)
                 {
-                    vertex->yieldResources(hex.getResourceType());
+                    vertex->yieldResources(hex->getResourceType());
                     // Remove cards from the CashBox
-                    _cashbox.drawResourceCard(hex.getResourceType());
+                    _cashbox.drawResourceCard(hex->getResourceType());
                 }
             }
         }
+    }
+}
+
+void Catan::setGamePhase(GamePhase gamePhase)
+{
+    _gamePhase = gamePhase;
+    
+    switch(_gamePhase)
+    {
+        case SETUP:
+            
+            cout << "Game phase is: SETUP" << endl;
+            break;
+        case PLAY:
+            cout << "Game phase is: PLAY" << endl;
+            _p1.setStartingPhase(false);
+            _p2.setStartingPhase(false);
+            _p3.setStartingPhase(false);
+            break;
+        case END:
+            cout << "Game phase is: END" << endl;
+            break;
     }
 }
 

@@ -47,11 +47,13 @@ namespace ariel
             map<VertexLocation, shared_ptr<Vertex>> _verticesMap;
             // A set map of the edges. The keys are the names of the edges and the values are the edges themselves.
             map<TrailLocation, shared_ptr<Trail>> _edgesMap;
+            static int hexagonCounter;
             
 
         public:
+            
             Hexagon(LandType landType, int value, Point &center, int id);
-            Hexagon(): _landType(LandType::None), _value(0), _center(Point(0,0)), id(0) {}
+            Hexagon(): enable_shared_from_this<Hexagon>(), _landType(LandType::None), _resourceType(ResourceType::None), _value(0), id(0), _center(Point(0,0)), _verticesMap(), _edgesMap() {} 
             ~Hexagon();
             void initResources();
             ResourceType getResourceType() const { return _resourceType;}
@@ -63,6 +65,8 @@ namespace ariel
             Point getCenter() const { return _center;}
             const map<VertexLocation, shared_ptr<Vertex>> getVerticesMap() const { return _verticesMap;}
             const map<TrailLocation, shared_ptr<Trail>> getEdgesMap() const { return _edgesMap;}
+            double getRadius();
+            string getLandTypeString();
             
             
     };

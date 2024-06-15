@@ -26,19 +26,19 @@ int main()
     catan.ChooseStartingPlayer();   // should print the name of the starting player, assume it is Amit.
     Board board = catan.getBoard(); // get the board of the game.
     
-    vector<LandType> places = {Forest, Hills};
-    vector<int> placesNum = {5, 6};
+    vector<LandType> places = {LandType::Forest, LandType::Hills};
+    vector<int> placesNum = {11, 6};
     p1.placeSettelemnt(places, placesNum, board);
     p1.placeRoad(places, placesNum, board);
     
-    vector<LandType> places = {Field, Desert};
-    vector<int> placesNum = {3, 4};
+    places = {LandType::Field, LandType::Desert};
+    placesNum = {4, 0};
     p1.placeSettelemnt(places, placesNum, board);
     p1.placeRoad(places, placesNum, board); // p1 chooses Forest, hills, Agricultural Land, Desert with numbers 5, 6, 3, 4.
 
     
-    vector<LandType> places = {Mountains, Pasture};
-    vector<int> placesNum = {4, 9};
+    places = {LandType::Mountains, LandType::Pasture};
+    placesNum = {8, 5};
     p2.placeSettelemnt(places, placesNum, board);
     p2.placeRoad(places, placesNum, board);
     try
@@ -50,26 +50,27 @@ int main()
         cout << e.what() << endl;
     }
     
-    vector<LandType> places = {Forest, Pasture};
-    vector<int> placesNum = {5, 9};
+    places = {LandType::Forest, LandType::Pasture};
+    placesNum = {9, 2};
     p2.placeSettelemnt(places, placesNum, board);
     p2.placeRoad(places, placesNum, board); // p2 chooses Mountains, Pasture Land, and Forest with numbers 4, 9, 5.
 
     
-    vector<LandType> places = {Mountains, Pasture};
-    vector<int> placesNum = {3, 8};
+    places = {LandType::Mountains, LandType::Pasture};
+    placesNum = {10, 2};
     p3.placeSettelemnt(places, placesNum, board);
     p3.placeRoad(places, placesNum, board);
     
-    vector<LandType> places = {Field, Pasture};
-    vector<int> placesNum = {3, 9};
+    places = {LandType::Field, LandType::Pasture};
+    placesNum = {4, 5};
     p3.placeSettelemnt(places, placesNum, board);
     p3.placeRoad(places, placesNum, board); // p3 chooses Mountains, Pasture Land, Agricultural Land, Pasture Land with numbers 3, 8, 3, 9.
+    catan.setGamePhase(GamePhase::PLAY); // Starting the game phase.
 
     // p1 has wood,bricks, and wheat, p2 has wood, ore, and wool, p3 has ore, wool, wheat.
     roll_sum =  p1.rollDice();
     catan.yieldResources(roll_sum);                                    // Lets say it's print 4. Then, p2 gets ore from the mountations.
-    p1.placeRoad({Forest, Hills}, {5, 6}, board); // p1 continues to build a road.
+    p1.placeRoad({LandType::Forest, LandType::Hills}, {5, 6}, board); // p1 continues to build a road.
     p1.endTurn();                                     // p1 ends his turn.
 
     roll_sum = p2.rollDice(); // Lets say it's print 9. Then, p3 gets wool from the Pasture Land, p2 gets wool from the Pasture Land.
@@ -91,7 +92,7 @@ int main()
 
     roll_sum = p1.rollDice(); // Lets say it's print 6. Then, p1 gets bricks from the hills.
     catan.yieldResources(roll_sum);
-    p1.trade(p2, Wood, Brick, 1, 1); // p1 trades 1 wood for 1 brick with p2.
+    p1.trade(p2, ResourceType::Wood, ResourceType::Brick, 1, 1); // p1 trades 1 wood for 1 brick with p2.
     p1.endTurn();                        // p1 ends his turn.
 
     roll_sum = p2.rollDice();           // Lets say it's print 9. Then, p3 gets wool from the Pasture Land, p2 gets wool from the Pasture Land.

@@ -29,11 +29,12 @@ namespace ariel
         Die _die1;
         Die _die2;
         bool _isTurn;
+        bool _isStatringPhase;
         
         
         
     public:
-        Player(const string name): _name(name), _victoryPoints(0), _isTurn(false) {}
+        Player(const string name): _name(name), _victoryPoints(0), _isTurn(false), _isStatringPhase(true) {}
         ~Player();
         void placeSettelemnt(vector<LandType> places, vector<int> placesNum, Board& board);
         void placeRoad(vector<LandType> places, vector<int> placesNum, Board& board);
@@ -59,6 +60,7 @@ namespace ariel
         bool canAffordCity();
         void deductResourcesForSettlement();
         void deductResourcesForRoad();
+        void setStartingPhase(bool isStartingPhase) { this->_isStatringPhase = isStartingPhase; }
 
     };
 } // namespace ariel

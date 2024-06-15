@@ -6,7 +6,7 @@
 #include <utility>
 #include <memory>
 #include <iomanip>
-
+#include <SFML/Graphics.hpp>
 #include "Hexagon.hpp"
 #include "Player.hpp"
 #include "Types.hpp"
@@ -24,28 +24,28 @@ namespace ariel
     {
     private:
         // A 2D array of hexagons in size 5x5 as a vector of vectors
-        vector<vector<Hexagon>> _hexagonGrid;
+        vector<vector<shared_ptr<Hexagon>>> _hexagonGrid;
         // A map of points to vertices
         map<Point, shared_ptr<Vertex>> _verticesMap;
         // A map of points to edges
         map<pair<shared_ptr<Vertex>, shared_ptr<Vertex>>, shared_ptr<Trail>> _edgesMap;
 
         // A map of points to hexagons
-        map<Point, Hexagon> _hexagonsMap;
+        map<Point, shared_ptr<Hexagon>> _hexagonsMap;
 
-        void drawHexagon(int row, int col, const Hexagon& hexagon) const;
+        
 
     public:
         Board(); // constructor
         ~Board(); // destructor
         void initHexagons();
 
-        const Hexagon& getHexagon(int q, int r) const { return this->_hexagonGrid[q][r]; }
+        shared_ptr<Hexagon> getHexagon(int q, int r) const { return this->_hexagonGrid[q][r]; }
         
         shared_ptr<Vertex> getVertex(vector<LandType>& places, vector<int>& placesNum) const;
-        map<Point, Hexagon> getHexagonsMap() const { return this->_hexagonsMap; }
+        map<Point, shared_ptr<Hexagon>> getHexagonsMap() const { return this->_hexagonsMap; }
         
-        void printBoard();
+        void printBoard(sf::RenderWindow& window);
         bool vertexMatches(shared_ptr<Vertex> v, vector<LandType>& places, vector<int>& placesNum) const;
         vector<shared_ptr<Vertex>> getNeighborVertices(shared_ptr<Vertex> v) const;
         bool hasRoad(shared_ptr<Vertex> v1, shared_ptr<Vertex> v2) const;

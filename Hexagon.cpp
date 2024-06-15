@@ -2,13 +2,16 @@
 #include <vector>
 #include <array>
 #include "Hexagon.hpp"
+#include <SFML/Graphics.hpp>
 
 
 using namespace std;
 using namespace ariel;
 
+int Hexagon::hexagonCounter = 0;
 // Constructor
-Hexagon::Hexagon(LandType landType, int value, Point &center, int id) : _landType(landType), _value(value), _center(center), id(id)
+Hexagon::Hexagon(LandType landType, int value, Point &center, int id) : enable_shared_from_this<Hexagon>(), _landType(landType), _resourceType(ResourceType::None), _value(value), id(id), _center(center), _verticesMap(), _edgesMap()
+
 {
 
     this->initResources();
@@ -55,6 +58,7 @@ void Hexagon::initHexagon(map<Point, shared_ptr<Vertex>> &verticesMap, map<pair<
         if (verticesMap.find(p) == verticesMap.end())
         {
             verticesMap[p] = make_shared<Vertex>(q, r, id);
+            hexagonCounter++;
         }
         return verticesMap[p];
     };
@@ -77,6 +81,7 @@ void Hexagon::initHexagon(map<Point, shared_ptr<Vertex>> &verticesMap, map<pair<
     bottom->addHexagon(shared_from_this());
     bottomLeft->addHexagon(shared_from_this());
     topLeft->addHexagon(shared_from_this());
+    
 
     // Create or reuse edges
     auto createEdge = [&](shared_ptr<Vertex> v1, shared_ptr<Vertex> v2)
@@ -114,39 +119,43 @@ void Hexagon::initHexagon(map<Point, shared_ptr<Vertex>> &verticesMap, map<pair<
     bottomLeft->addTrail(leftEdge);
     topLeft->addTrail(leftEdge);
     topLeft->addTrail(topLeftEdge);
+    
+     
+}
+
+// Get the radius of the hexagon
+double Hexagon::getRadius()
+{
+    for (auto &[location, edge] : this->_edgesMap)
+    {
+        cout << "Length of edge: " << edge->getLength() << endl;
+    }
+    return 0;
+    
 }
 
 
-// ostream &ariel::operator<<(ostream &os, const Hexagon &hexagon)
-// {
-//     // Print the edges of the hexagon, land type and value
-//     switch (hexagon._landType)
-//     {
-//     case Forest:
-//         os << "Forest ";
-//         break;
-//     case Hills:
-//         os << "Hills ";
-//         break;
-//     case Mountains:
-//         os << "Mountains ";
-//         break;
-//     case Pasture:
-//         os << "Pasture ";
-//         break;
-//     case Field:
-//         os << "Field ";
-//         break;
-//     case Desert:
-//         os << "Desert ";
-//         break;
-//     default:
-//         break;
-//     }
+// Get the land type of the hexagon
+string Hexagon::getLandTypeString()
+{
+    // If the land type is null raise an exception
+    
+    switch (this->_landType)
+    {
+    case LandType::Forest:
+        return "Forest";
+    case LandType::Hills:
+        return "Hills";
+    case LandType::Mountains:
+        return "Mountains";
+    case LandType::Pasture:
+        return "Pasture";
+    case LandType::Field:
+        return "Field";
+    case LandType::Desert:
+        return "Desert";
+    default:
+        return "None";
+    }
+}
 
-//     os << hexagon._value << " ";
-//     for (auto const &edge : hexagon._edgesMap)
-//     {
-//         os << *edge.second;
-//     }
-// }

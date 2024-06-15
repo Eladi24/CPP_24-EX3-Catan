@@ -29,9 +29,9 @@ namespace ariel
             Road* _road;
         
         public:
-            Trail(const Player* owner, shared_ptr<Vertex>  start, shared_ptr<Vertex>  end): _owner(owner), _start(start), _end(end), _hasRoad(false), _road(nullptr) {}
-            Trail(shared_ptr<Vertex>  start, shared_ptr<Vertex>  end): _owner(nullptr), _start(start), _end(end), _hasRoad(false), _road(nullptr) {}
-            
+            Trail(const Player* owner, shared_ptr<Vertex>  start, shared_ptr<Vertex>  end): _owner(owner), _hasRoad(true), _start(start), _end(end), _road(nullptr) {}
+            Trail(shared_ptr<Vertex>  start, shared_ptr<Vertex>  end): _owner(nullptr), _hasRoad(false), _start(start), _end(end), _road(nullptr) {}
+            double getLength() const;
             ~Trail();
             const Player* getOwner() const { return this->_owner; }
             bool hasRoad() const { return this->_hasRoad; }

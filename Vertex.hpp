@@ -17,7 +17,6 @@ namespace ariel
     class Vertex: public Point
     {
         private:
-            vector<Vertex> _neighbors;
             Structure* _structure;
             bool _isOccupied;
             int _id;
@@ -27,10 +26,10 @@ namespace ariel
         public:
             static constexpr double squareRoot3Div2 = 0.86602540378;
             static constexpr double half = 0.5;
-            Vertex(double x, double y, int id): Point(x, y), _id(id), _isOccupied(false), _structure(nullptr) {}
-            Vertex(double x, double y, int id, Structure* structure): Point(x, y), _id(id), _isOccupied(true), _structure(structure) {}
+            Vertex(double x, double y, int id): Point(x, y), _structure(nullptr), _isOccupied(false), _id(id), _hexagons(), _trails() {} 
+            Vertex(double x, double y, int id, Structure* structure): Point(x, y), _structure(structure), _isOccupied(true), _id(id), _hexagons(), _trails() {}
             ~Vertex();
-            void addNeighbor(Vertex v);
+            
             void buildSettlement(Player* p);
             void buildCity(Player* p);
             void yieldResources(ResourceType resource);

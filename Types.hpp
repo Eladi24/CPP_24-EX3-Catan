@@ -60,6 +60,7 @@ namespace ariel
 std::ostream& operator<<(std::ostream& os, const LandType& landType);
 std::ostream& operator<<(std::ostream& os, const ResourceType& resourceType);
 std::ostream& operator<<(std::ostream& os, const CardType& cardType);
+
 }
 
 

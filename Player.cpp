@@ -14,7 +14,7 @@ Player::~Player() {
 
 int Player::rollDice()
 {
-    if (this->_isTurn)
+    if (this->_isTurn || this->_isStatringPhase)
     {
         return this->_die1.roll() + this->_die2.roll();
     }
@@ -22,6 +22,11 @@ int Player::rollDice()
     {
         throw new invalid_argument("Not player's turn");
     }
+}
+
+void Player::endTurn()
+{
+    this->_isTurn = false;
 }
 
 bool Player::trade(Player pToTrade, ResourceType resourceToGive, ResourceType resourceToGet, int amountToGive, int amountToGet) {
@@ -126,7 +131,7 @@ void Player::placeSettelemnt(vector<LandType> places, vector<int> placesNum, Boa
         throw new invalid_argument("Invalid number of arguments");
     }
 
-    if (!this->canAffordSettlement())
+    if (!this->canAffordSettlement() && !this->_isStatringPhase)
     {
         throw new invalid_argument("Player cannot afford to build a settlement");
     }
@@ -239,14 +244,19 @@ bool Player::canAffordRoad() {
 
 
 void Player::deductResourcesForSettlement() {
-    this->removeResource(ResourceType::Brick, 1);
-    this->removeResource(ResourceType::Wood, 1);
-    this->removeResource(ResourceType::Wool, 1);
-    this->removeResource(ResourceType::Grain, 1);
+    if (!this->_isStatringPhase) {
+        this->removeResource(ResourceType::Brick, 1);
+        this->removeResource(ResourceType::Wood, 1);
+        this->removeResource(ResourceType::Wool, 1);
+        this->removeResource(ResourceType::Grain, 1);
+    }
 }
 
 void Player::deductResourcesForRoad() {
-    this->removeResource(ResourceType::Brick, 1);
-    this->removeResource(ResourceType::Wood, 1);
+    if(this->_isStatringPhase) {
+
+        this->removeResource(ResourceType::Brick, 1);
+        this->removeResource(ResourceType::Wood, 1);
+    }
 }
 

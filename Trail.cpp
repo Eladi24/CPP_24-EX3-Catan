@@ -24,6 +24,9 @@ void Trail::setRoad(const Player* owner)
     }
 }
 
-
+double Trail::getLength() const
+{
+    return this->_start->distance(*this->_end);
+}
 
 

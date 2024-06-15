@@ -13,12 +13,6 @@ Vertex::~Vertex() {
     delete this->_structure;
 }
 
-// Add a neighbor to the vertex
-void Vertex::addNeighbor(Vertex v)
-{
-    this->_neighbors.push_back(v);
-}
-
 // Build a settlement on the vertex
 void Vertex::buildSettlement(Player* p)
 {
