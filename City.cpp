@@ -6,8 +6,8 @@ using namespace ariel;
 
 City::~City() {}
 
-void City::yieldResources(ResourceType resource)
+void City::yieldResources(ResourceType resource, Cashbox &cashbox)
 {
-    _owner->addResource(resource, _productionRate);
+    _owner->addResource(resource, cashbox, _productionRate);
     cout << "City produced for player " << _owner->getName() << " " << _productionRate << " " << resource << endl;
 }

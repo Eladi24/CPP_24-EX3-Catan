@@ -9,7 +9,8 @@ Point::~Point() {}
 
 bool Point::operator==(const Point &p) const
 {
-    return (this->_x == p._x && this->_y == p._y);
+    static const double EPSILON = 1e-6;
+        return std::abs(this->getX() - p.getX()) < EPSILON && std::abs(this->getY() - p.getY()) < EPSILON;
 }
 
 double Point::distance(const Point &p) const

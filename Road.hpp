@@ -1,13 +1,16 @@
 #ifndef _ROAD_HPP_
 #define _ROAD_HPP_
+
 #include "Types.hpp"
+
 
 namespace ariel
 {
+    class Player;
+
     class Road
     {
-        class Player;
-
+        
         private:
             Player* _owner;
             
@@ -15,6 +18,7 @@ namespace ariel
             Road(Player* owner): _owner(owner) {}
             ~Road() {}
             Player* getOwner() const { return this->_owner; }
+            void setOwner(Player* owner) { this->_owner = owner; }
             
     };
 }

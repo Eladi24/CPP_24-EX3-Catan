@@ -21,7 +21,7 @@ namespace ariel
     {
         private:
             // A deck of development cards
-            vector<shared_ptr<DevCard>> devCards;
+            vector<DevCard*> devCards;
             // A deck of resource cards
             vector<ResourceCard> woodCards;
             vector<ResourceCard> brickCards;
@@ -39,13 +39,13 @@ namespace ariel
             // Cashbox initialization
             void init();
             // Draw a development card
-            shared_ptr<DevCard> drawDevCard();
+            DevCard* drawDevCard();
             // Draw a resource card
             ResourceCard drawResourceCard(ResourceType type);
             // Return a resource card to the deck
             void returnResourceCard(ResourceCard card);
             // Return a development card to the deck
-            void returnDevCard(shared_ptr<DevCard> card);
+            void returnDevCard(DevCard* card);
             // Get the number of resource cards in the deck
             int getNumResourceCards(ResourceType type);
             // Get the number of development cards in the deck

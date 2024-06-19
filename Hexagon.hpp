@@ -48,7 +48,12 @@ namespace ariel
             // A set map of the edges. The keys are the names of the edges and the values are the edges themselves.
             map<TrailLocation, shared_ptr<Trail>> _edgesMap;
             static int hexagonCounter;
-            
+            static int EdgeCounter;
+            const double HEXAGON_RADIUS = 2;
+            Point pointyHextoPixel(Point center, double size);
+            Point pixelToPointyHex(Point p, double size);
+            // pixel to pointy hex fraction
+            Point pixelToPointyHexFraction(double x, double y);
 
         public:
             
@@ -60,13 +65,17 @@ namespace ariel
             LandType getLandType() const { return _landType;}
             int getValue() const { return _value;}
             void setValue(int value) { _value = value;}
-            void initHexagon(map<Point, shared_ptr<Vertex>>& verticesMap, map<pair<shared_ptr<Vertex>, shared_ptr<Vertex>>, shared_ptr<Trail>>& edgesMap);
+            void initHexagon( map<Point, vector<shared_ptr<Vertex>>>& verticesMap, map<Point, vector<shared_ptr<Trail>>>& edgesMap);
             int getId() const { return id;}
             Point getCenter() const { return _center;}
             const map<VertexLocation, shared_ptr<Vertex>> getVerticesMap() const { return _verticesMap;}
             const map<TrailLocation, shared_ptr<Trail>> getEdgesMap() const { return _edgesMap;}
-            double getRadius();
+            
             string getLandTypeString();
+            const double getHexagonRadius() const { return HEXAGON_RADIUS;}
+            bool operator==(const Hexagon& other) const;
+            
+           
             
             
     };

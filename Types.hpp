@@ -49,12 +49,14 @@ namespace ariel
         LONGEST_ROAD
     };
 
+
+
     typedef struct TradeRequest
         {
             ResourceType resourceToGive;
             ResourceType resourceToGet;
-            int amountToGive;
-            int amountToGet;
+            uint amountToGive;
+            uint amountToGet;
         } TradeRequest;
 
 std::ostream& operator<<(std::ostream& os, const LandType& landType);

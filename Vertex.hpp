@@ -5,6 +5,7 @@
 #include "Hexagon.hpp"
 #include "Structure.hpp"
 #include "Player.hpp"
+#include "Cashbox.hpp"
 
 
 using namespace std;
@@ -20,8 +21,8 @@ namespace ariel
             Structure* _structure;
             bool _isOccupied;
             int _id;
-            set<shared_ptr<Hexagon>> _hexagons;
-            set<shared_ptr<Trail>> _trails;
+            vector<weak_ptr<Hexagon>> _hexagons;
+            vector<weak_ptr<Trail>> _trails;
             
         public:
             static constexpr double squareRoot3Div2 = 0.86602540378;
@@ -32,15 +33,19 @@ namespace ariel
             
             void buildSettlement(Player* p);
             void buildCity(Player* p);
-            void yieldResources(ResourceType resource);
+            void yieldResources(ResourceType resource, Cashbox &cashbox);
             bool isOccupied() const { return this->_isOccupied; }
             Structure* getStructure() const { return this->_structure; }
             int getId() const { return this->_id; }
             
-            set<shared_ptr<Hexagon>> getHexagons() const { return this->_hexagons; }
-            set<shared_ptr<Trail>> getTrails() const { return this->_trails; }
-            void addHexagon(shared_ptr<Hexagon> hex) { this->_hexagons.insert(hex); }
-            void addTrail(shared_ptr<Trail> trail) { this->_trails.insert(trail); }
+            vector<weak_ptr<Hexagon>> getHexagons() const { return this->_hexagons; }
+            vector<weak_ptr<Trail>> getTrails() const { return this->_trails; }
+            void addHexagon(shared_ptr<Hexagon> hex) { this->_hexagons.push_back(hex); }
+            void addTrail(shared_ptr<Trail> trail) { this->_trails.push_back(trail); }
+            bool operator==(const Point& p) const;
+            shared_ptr<Trail> getTrail(shared_ptr<Vertex> v) const;
+            
+            
     };
 }
 

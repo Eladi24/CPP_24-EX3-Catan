@@ -4,14 +4,15 @@
 #include <iostream>
 #include <vector>
 #include "Types.hpp"
-#include "Cashbox.hpp"
 #include "Player.hpp"
+#include "Cashbox.hpp"
 
 using namespace std;
 
 namespace ariel
 {
     class Player;
+    class Cashbox;
 
     class Structure
     {
@@ -28,7 +29,7 @@ namespace ariel
             // Get the owner of the structure
             Player* getOwner() { return this->_owner;}
             // Yield resources
-            virtual void yieldResources(ResourceType resource) = 0;
+            virtual void yieldResources(ResourceType resource, Cashbox &cashbox) = 0;
             
 
     };

@@ -21,7 +21,8 @@ int main()
         window.clear();
         board.printBoard(window);
         window.display();
-        //window.close();
+        // sf::sleep(sf::seconds(2));
+        // window.close();
     }
     
     return 0;

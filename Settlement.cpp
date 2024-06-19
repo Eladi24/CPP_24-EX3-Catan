@@ -9,9 +9,9 @@ using namespace ariel;
 // Destructor
 Settlement::~Settlement() {}
 
-void Settlement::yieldResources(ResourceType resource)
+void Settlement::yieldResources(ResourceType resource, Cashbox &cashbox)
 {
-    _owner->addResource(resource, 1);
+    _owner->addResource(resource, cashbox, 1);
     cout << "Settlement produced for player " << _owner->getName() << " 1 " << resource << endl;
 }
 

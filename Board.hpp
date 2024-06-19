@@ -25,10 +25,10 @@ namespace ariel
     private:
         // A 2D array of hexagons in size 5x5 as a vector of vectors
         vector<vector<shared_ptr<Hexagon>>> _hexagonGrid;
-        // A map of points to vertices
-        map<Point, shared_ptr<Vertex>> _verticesMap;
-        // A map of points to edges
-        map<pair<shared_ptr<Vertex>, shared_ptr<Vertex>>, shared_ptr<Trail>> _edgesMap;
+        // A map of points to vertices vec
+        map<Point, vector<shared_ptr<Vertex>>> _verticesMap;
+        // A map of points to edges vector
+        map<Point, vector<shared_ptr<Trail>>> _edgesMap;
 
         // A map of points to hexagons
         map<Point, shared_ptr<Hexagon>> _hexagonsMap;
@@ -51,6 +51,8 @@ namespace ariel
         bool hasRoad(shared_ptr<Vertex> v1, shared_ptr<Vertex> v2) const;
         shared_ptr<Trail> getTrail(shared_ptr<Vertex> v1, shared_ptr<Vertex> v2) const;
         void placeRoad(shared_ptr<Vertex> v1, shared_ptr<Vertex> v2, const Player* owner);
+        
+        
     };
 } // namespace ariel
 

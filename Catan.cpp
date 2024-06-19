@@ -3,11 +3,9 @@
 using namespace std;
 using namespace ariel;
 
-
 Catan::~Catan()
 {
 }
-
 
 void Catan::ChooseStartingPlayer()
 {
@@ -28,7 +26,7 @@ void Catan::ChooseStartingPlayer()
     if (p1Roll > p2Roll && p1Roll > p3Roll)
     {
         _currentPlayerIndex = 0;
-        
+
         _p1.setTurn(true);
         cout << "The starting player is: " << _p1.getName() << endl;
     }
@@ -48,7 +46,7 @@ void Catan::ChooseStartingPlayer()
     }
 }
 
-Player& Catan::checkWinner()
+Player &Catan::checkWinner()
 {
     if (_p1.getVictoryPoints() >= 10 && _p2.getVictoryPoints() < 10 && _p3.getVictoryPoints() < 10)
     {
@@ -69,17 +67,18 @@ Player& Catan::checkWinner()
     else
     {
         _gamePhase = PLAY;
-        throw new invalid_argument("No winner yet");
+        throw invalid_argument("No winner yet");
     }
 }
 
 void Catan::printWinner()
 {
-    try {
-        Player& winner = checkWinner();
+    try
+    {
+        Player &winner = checkWinner();
         cout << "The winner is: " << winner.getName() << endl;
     }
-    catch (invalid_argument e)
+    catch (const invalid_argument &e)
     {
         cout << e.what() << endl;
     }
@@ -99,18 +98,16 @@ void Catan::changeTurn()
 
 void Catan::yieldResources(int diceRoll)
 {
-    
-    for (const auto& [key, hex] : _board.getHexagonsMap())
+
+    for (const auto &[key, hex] : _board.getHexagonsMap())
     {
         if (hex->getValue() == diceRoll)
         {
-            for (const auto& [vertexKey, vertex] : hex->getVerticesMap())
+            for (const auto &[vertexKey, vertex] : hex->getVerticesMap())
             {
                 if (vertex->getStructure() != nullptr)
                 {
-                    vertex->yieldResources(hex->getResourceType());
-                    // Remove cards from the CashBox
-                    _cashbox.drawResourceCard(hex->getResourceType());
+                    vertex->yieldResources(hex->getResourceType(), _cashbox);
                 }
             }
         }
@@ -120,24 +117,21 @@ void Catan::yieldResources(int diceRoll)
 void Catan::setGamePhase(GamePhase gamePhase)
 {
     _gamePhase = gamePhase;
-    
-    switch(_gamePhase)
+
+    switch (_gamePhase)
     {
-        case SETUP:
-            
-            cout << "Game phase is: SETUP" << endl;
-            break;
-        case PLAY:
-            cout << "Game phase is: PLAY" << endl;
-            _p1.setStartingPhase(false);
-            _p2.setStartingPhase(false);
-            _p3.setStartingPhase(false);
-            break;
-        case END:
-            cout << "Game phase is: END" << endl;
-            break;
+    case SETUP:
+
+        cout << "Game phase is: SETUP" << endl;
+        break;
+    case PLAY:
+        cout << "Game phase is: PLAY" << endl;
+        _p1.setStartingPhase(false);
+        _p2.setStartingPhase(false);
+        _p3.setStartingPhase(false);
+        break;
+    case END:
+        cout << "Game phase is: END" << endl;
+        break;
     }
 }
-
-
-

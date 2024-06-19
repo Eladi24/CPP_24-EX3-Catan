@@ -5,7 +5,7 @@ CXXFLAGS=-std=c++17 -Wall -g
 # Linker flags
 LDFLAGS =-lsfml-graphics -lsfml-window -lsfml-system
 # Valgrind flags
-VALGRIND_FLAGS=--leak-check=full --show-leak-kinds=all --error-exitcode=99
+VALGRIND_FLAGS=--leak-check=full --show-leak-kinds=all --error-exitcode=99 --track-origins=yes --verbose --log-file=valgrind-out.txt
 # Catan library source files
 LIB_SRC = Board.cpp Cashbox.cpp Catan.cpp City.cpp Hexagon.cpp Player.cpp Point.cpp Settlement.cpp \
 		Structure.cpp Trail.cpp Vertex.cpp Types.cpp KnightCard.cpp ProgressCard.cpp \
@@ -36,6 +36,12 @@ Demo: Demo.o $(LIB)
 
 $(LIB): $(LIB_OBJ)
 	ar rcs $(LIB) $(LIB_OBJ)
+
+Valgrind_demo: Demo
+	valgrind $(VALGRIND_FLAGS) ./Demo
+
+Valgrind_main: Main
+	valgrind --leak-check=full --track-origins=yes ./Main
 
 .PHONY: clean all
 

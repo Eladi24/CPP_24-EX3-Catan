@@ -4,21 +4,25 @@
 #include "Hexagon.hpp"
 #include <SFML/Graphics.hpp>
 
-
 using namespace std;
 using namespace ariel;
 
 int Hexagon::hexagonCounter = 0;
+int Hexagon::EdgeCounter = 0;
 // Constructor
 Hexagon::Hexagon(LandType landType, int value, Point &center, int id) : enable_shared_from_this<Hexagon>(), _landType(landType), _resourceType(ResourceType::None), _value(value), id(id), _center(center), _verticesMap(), _edgesMap()
 
 {
-
+    // this->_center = pixelToPointyHex(center, HEXAGON_RADIUS);
     this->initResources();
 }
 
 // Destructor
-Hexagon::~Hexagon() {}
+Hexagon::~Hexagon()
+{
+    this->_verticesMap.clear();
+    this->_edgesMap.clear();
+}
 
 // Initialize the resources of the hexagon
 void Hexagon::initResources()
@@ -49,49 +53,72 @@ void Hexagon::initResources()
 }
 
 // Initialize the vertices of the hexagon
-void Hexagon::initHexagon(map<Point, shared_ptr<Vertex>> &verticesMap, map<pair<shared_ptr<Vertex>, shared_ptr<Vertex>>, shared_ptr<Trail>> &edgesMap)
+void Hexagon::initHexagon(map<Point, vector<shared_ptr<Vertex>>> &verticesMap, map<Point, vector<shared_ptr<Trail>>> &edgesMap)
 {
     // Create or reuse vertices
     auto createVertex = [&](double q, double r, int id)
     {
         Point p = Point(q, r);
-        if (verticesMap.find(p) == verticesMap.end())
+        for (auto &[location, vertices] : verticesMap)
         {
-            verticesMap[p] = make_shared<Vertex>(q, r, id);
-            hexagonCounter++;
+            for (auto &vertex : vertices)
+            {
+                if (*vertex == p)
+                {
+
+                    return vertex;
+                }
+            }
         }
-        return verticesMap[p];
+        hexagonCounter++;
+        verticesMap[this->_center].push_back(make_shared<Vertex>(q, r, id));
+        
+        return verticesMap[this->_center].back();
     };
+
     auto top = createVertex(this->_center.getX(), this->_center.getY() + 1, 0);
+    top->addHexagon(shared_from_this());
+
     auto topRight = createVertex(this->_center.getX() + Vertex::squareRoot3Div2, this->_center.getY() + Vertex::half, 1);
+    topRight->addHexagon(shared_from_this());
     auto bottomRight = createVertex(this->_center.getX() + Vertex::squareRoot3Div2, this->_center.getY() - Vertex::half, 2);
+    bottomRight->addHexagon(shared_from_this());
     auto bottom = createVertex(this->_center.getX(), this->_center.getY() - 1, 3);
+    bottom->addHexagon(shared_from_this());
     auto bottomLeft = createVertex(this->_center.getX() - Vertex::squareRoot3Div2, this->_center.getY() - Vertex::half, 4);
+    bottomLeft->addHexagon(shared_from_this());
     auto topLeft = createVertex(this->_center.getX() - Vertex::squareRoot3Div2, this->_center.getY() + Vertex::half, 5);
+    topLeft->addHexagon(shared_from_this());
+    // cast shared_ptr<Vertex> to weak_ptr<Vertex>
     this->_verticesMap[TOP] = top;
     this->_verticesMap[TOP_RIGHT] = topRight;
     this->_verticesMap[BOTTOM_RIGHT] = bottomRight;
     this->_verticesMap[BOTTOM] = bottom;
     this->_verticesMap[BOTTOM_LEFT] = bottomLeft;
     this->_verticesMap[TOP_LEFT] = topLeft;
-
-    top->addHexagon(shared_from_this());
-    topRight->addHexagon(shared_from_this());
-    bottomRight->addHexagon(shared_from_this());
-    bottom->addHexagon(shared_from_this());
-    bottomLeft->addHexagon(shared_from_this());
-    topLeft->addHexagon(shared_from_this());
     
-
     // Create or reuse edges
     auto createEdge = [&](shared_ptr<Vertex> v1, shared_ptr<Vertex> v2)
     {
-        pair<shared_ptr<Vertex>, shared_ptr<Vertex>> key = {v1, v2};
-        if (edgesMap.find(key) == edgesMap.end())
+        for (auto &[key, edges] : edgesMap)
         {
-            edgesMap[key] = make_shared<Trail>(v1, v2);
+            for (auto &edge : edges)
+            {
+                if (!edge->getStart().expired() && !edge->getEnd().expired())
+                {
+                    shared_ptr<Vertex> start = edge->getStart().lock();
+                    shared_ptr<Vertex> end = edge->getEnd().lock();
+                    if ((*start == *v1 && *end == *v2) || (*start == *v2 && *end == *v1))
+                    {
+
+                        return edge;
+                    }
+                }
+            }
         }
-        return edgesMap[key];
+        EdgeCounter++;
+        edgesMap[this->_center].push_back(make_shared<Trail>(v1, v2));
+        return edgesMap[this->_center].back();
     };
 
     auto topRightEdge = createEdge(top, topRight);
@@ -120,26 +147,13 @@ void Hexagon::initHexagon(map<Point, shared_ptr<Vertex>> &verticesMap, map<pair<
     topLeft->addTrail(leftEdge);
     topLeft->addTrail(topLeftEdge);
     
-     
 }
-
-// Get the radius of the hexagon
-double Hexagon::getRadius()
-{
-    for (auto &[location, edge] : this->_edgesMap)
-    {
-        cout << "Length of edge: " << edge->getLength() << endl;
-    }
-    return 0;
-    
-}
-
 
 // Get the land type of the hexagon
 string Hexagon::getLandTypeString()
 {
     // If the land type is null raise an exception
-    
+
     switch (this->_landType)
     {
     case LandType::Forest:
@@ -159,3 +173,28 @@ string Hexagon::getLandTypeString()
     }
 }
 
+Point Hexagon::pointyHextoPixel(Point center, double size)
+{
+    double x = size * (sqrt(3.0) * center.getX() + sqrt(3.0) / 2 * center.getY());
+    double y = size * (3.0 / 2 * center.getY());
+    return Point(x, y);
+}
+
+Point Hexagon::pixelToPointyHex(Point p, double size)
+{
+    double q = (sqrt(3.0) / 3 * p.getX() - 1.0 / 3 * p.getY()) / size;
+    double r = (2.0 / 3 * p.getY()) / size;
+    return Point(q, r);
+}
+
+Point Hexagon::pixelToPointyHexFraction(double x, double y)
+{
+    double q = sqrt(3.0) / 3 * x - 1.0 / 3 * y;
+    double r = 2.0 / 3 * y;
+    return Point(q, r);
+}
+
+bool Hexagon::operator==(const Hexagon &other) const
+{
+    return this->_center == other._center;
+}

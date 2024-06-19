@@ -34,6 +34,7 @@ namespace ariel
         
     public:
         Catan(Player p1, Player p2, Player p3): _p1(p1), _p2(p2), _p3(p3), _board(), _cashbox(), _turnCounter(0), _currentPlayerIndex(0), roundCounter(0), _gamePhase(SETUP) {}
+        
         ~Catan();
         
         void ChooseStartingPlayer();

@@ -17,6 +17,12 @@ using namespace ariel;
 // Destructor
 Cashbox::~Cashbox()
 {
+    // Delete the development cards
+    for (DevCard* card : devCards)
+    {
+        delete card;
+    }
+    devCards.clear();
     
 }
 
@@ -26,38 +32,38 @@ void Cashbox::init()
      // Initialize the development cards
     for (int i = 0; i < 14; i++)
     {
-        shared_ptr<DevCard> knight = make_shared<KnightCard>();
+        DevCard* knight = new KnightCard();
         devCards.push_back(knight);
     }
 
     for (int i = 0; i < 5; i++)
     {
-        shared_ptr<DevCard> victoryPoint = make_shared<VictoryPointCard>();
+        DevCard* victoryPoint = new VictoryPointCard();
         devCards.push_back(victoryPoint);
     }
 
     for (int i = 0; i < 2; i++)
     {
-        shared_ptr<DevCard> roadBuilding = make_shared<ProgressCard>(CardType::PROGRESS, 2, SubCardType::ROAD_BUILDING);
+        DevCard* roadBuilding = new ProgressCard(CardType::PROGRESS, 2, SubCardType::ROAD_BUILDING);
         devCards.push_back(roadBuilding);
     }
 
     for (int i = 0; i < 2; i++)
     {
-        shared_ptr<DevCard> yearOfPlenty = make_shared<ProgressCard>(CardType::PROGRESS, 2, SubCardType::YEAR_OF_PLENTY);
+        DevCard* yearOfPlenty = new ProgressCard (CardType::PROGRESS, 2, SubCardType::YEAR_OF_PLENTY);
         devCards.push_back(yearOfPlenty);
     }
 
     for (int i = 0; i < 2; i++)
     {
-        shared_ptr<DevCard> monopoly = make_shared<ProgressCard>(CardType::PROGRESS, 2, SubCardType::MONOPOLY);
+        DevCard* monopoly = new ProgressCard (CardType::PROGRESS, 2, SubCardType::MONOPOLY);
         devCards.push_back(monopoly);
     }
 
-    shared_ptr<DevCard> largestArmy = make_shared<ProgressCard>(CardType::PROGRESS, 2, SubCardType::LARGEST_ARMY);
+    DevCard* largestArmy = new ProgressCard(CardType::PROGRESS, 2, SubCardType::LARGEST_ARMY);
     devCards.push_back(largestArmy);
 
-    shared_ptr<DevCard> longestRoad = make_shared<ProgressCard>(CardType::PROGRESS, 2, SubCardType::LONGEST_ROAD); 
+    DevCard* longestRoad = new ProgressCard(CardType::PROGRESS, 2, SubCardType::LONGEST_ROAD); 
     devCards.push_back(longestRoad);
 
     // Initialize the resource cards
@@ -104,14 +110,14 @@ void Cashbox::shuffleResourceCards()
     random_shuffle(grainCards.begin(), grainCards.end());
 }
 
-shared_ptr<DevCard> Cashbox::drawDevCard()
+DevCard* Cashbox::drawDevCard()
 {
     if (devCards.empty())
     {
-        throw "No development cards left in the deck";
+        throw invalid_argument("No development cards left in the deck");
     }
     // Draw a development card
-    shared_ptr<DevCard> card = devCards.back();
+    DevCard* card = devCards.back();
     // Remove the card from the deck, needs to be deleted by the caller
     devCards.pop_back();
     
@@ -127,7 +133,7 @@ ResourceCard Cashbox::drawResourceCard(ResourceType type)
         case ResourceType::Wood:
             if (woodCards.empty())
             {
-                throw "No wood cards left in the deck";
+                throw invalid_argument("No wood cards left in the deck");
             }
             card = woodCards.back();
             woodCards.pop_back();
@@ -135,7 +141,7 @@ ResourceCard Cashbox::drawResourceCard(ResourceType type)
         case ResourceType::Brick:
             if (brickCards.empty())
             {
-                throw "No brick cards left in the deck";
+                throw invalid_argument("No brick cards left in the deck");
             }
             card = brickCards.back();
             brickCards.pop_back();
@@ -143,7 +149,7 @@ ResourceCard Cashbox::drawResourceCard(ResourceType type)
         case ResourceType::Ore:
             if (oreCards.empty())
             {
-                throw "No ore cards left in the deck";
+                throw invalid_argument("No ore cards left in the deck");
             }
             card = oreCards.back();
             oreCards.pop_back();
@@ -151,7 +157,7 @@ ResourceCard Cashbox::drawResourceCard(ResourceType type)
         case ResourceType::Wool:
             if (woolCards.empty())
             {
-                throw "No wool cards left in the deck";
+                throw invalid_argument("No wool cards left in the deck");
             }
             card = woolCards.back();
             woolCards.pop_back();
@@ -159,18 +165,18 @@ ResourceCard Cashbox::drawResourceCard(ResourceType type)
         case ResourceType::Grain:
             if (grainCards.empty())
             {
-                throw "No grain cards left in the deck";
+                throw invalid_argument("No grain cards left in the deck");
             }
             card = grainCards.back();
             grainCards.pop_back();
             break;
         default:
-            throw "Invalid resource type";
+            throw invalid_argument("Invalid resource type");
     }
     return card;
 }
 
-void Cashbox::returnDevCard(shared_ptr<DevCard> card)
+void Cashbox::returnDevCard(DevCard* card)
 {
     // Return a development card to the deck
     devCards.push_back(card);
@@ -197,7 +203,7 @@ void Cashbox::returnResourceCard(ResourceCard card)
             grainCards.push_back(card);
             break;
         default:
-            throw "Invalid resource type";
+            throw invalid_argument("Invalid resource type");
     }
 }
 
@@ -205,12 +211,11 @@ void Cashbox::loanResourceCard(Player* p, ResourceCard cardToGive, ResourceType 
 {
     if (p->getResourceAmount(cardToGive.type) < 4)
     {
-        throw "Player does not have enough resources to loan";
+        throw invalid_argument("Player does not have enough resources to loan");
     }
 
-    p->removeResource(cardToGive.type, 4);
-    ResourceCard card = drawResourceCard(cardToGet);
-    p->addResource(cardToGet, 1);
+    p->removeResource(cardToGive.type, *this, 4);
+    p->addResource(cardToGet, *this, 1);
 }
 
 int Cashbox::getNumResourceCards(ResourceType type)
@@ -228,7 +233,7 @@ int Cashbox::getNumResourceCards(ResourceType type)
         case ResourceType::Grain:
             return grainCards.size();
         default:
-            throw "Invalid resource type";
+            throw invalid_argument("Invalid resource type");
     }
 }
 
@@ -246,7 +251,7 @@ CardType Cashbox::peekDeck()
 {
     if (devCards.empty())
     {
-        throw "No development cards left in the deck";
+        throw invalid_argument("No development cards left in the deck");
     }
     return devCards.back()->getCardType();
 }
