@@ -10,10 +10,10 @@ using namespace ariel;
 int Hexagon::hexagonCounter = 0;
 int Hexagon::EdgeCounter = 0;
 // Constructor
-Hexagon::Hexagon(LandType landType, int value, Point &center, int id) : enable_shared_from_this<Hexagon>(), _landType(landType), _resourceType(ResourceType::None), _value(value), id(id), _center(center), _verticesMap(), _edgesMap()
+Hexagon::Hexagon(LandType landType, int value, Point &center, int id) : enable_shared_from_this<Hexagon>(), _landType(landType), _resourceType(ResourceType::None), _value(value), id(id), _center(center), _verticesMap(), _edgesMap(), _hasRobber(false)
 
 {
-    // this->_center = pixelToPointyHex(center, HEXAGON_RADIUS);
+    
     this->initResources();
 }
 

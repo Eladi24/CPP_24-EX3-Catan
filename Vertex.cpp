@@ -52,7 +52,7 @@ void Vertex::yieldResources(ResourceType resource, Cashbox &cashbox)
 {
     if (this->_isOccupied)
     {   
-        cout << "Trying to yield: " << resource << "For player: " << this->_structure->getOwner()->getName() << endl;
+        
         this->_structure->yieldResources(resource, cashbox);
     }
     else

@@ -21,9 +21,10 @@ int main()
         window.clear();
         board.printBoard(window);
         window.display();
-        // sf::sleep(sf::seconds(2));
-        // window.close();
+        sf::sleep(sf::seconds(5));
+        window.close();
     }
+    cout << board.getHexagonsMap().size() << endl;
     
     return 0;
 }

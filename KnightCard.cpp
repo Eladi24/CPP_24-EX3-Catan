@@ -6,5 +6,5 @@ KnightCard::~KnightCard() {}
 
 void KnightCard::activate()
 {
-    std::cout << "Knight card activated" << std::endl;
+
 }

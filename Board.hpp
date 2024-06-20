@@ -40,7 +40,7 @@ namespace ariel
         ~Board(); // destructor
         void initHexagons();
 
-        shared_ptr<Hexagon> getHexagon(int q, int r) const { return this->_hexagonGrid[q][r]; }
+        shared_ptr<Hexagon> getHexagon(int q, int r) const { return this->_hexagonsMap.at(Point(q, r)); }
         
         shared_ptr<Vertex> getVertex(vector<LandType>& places, vector<int>& placesNum) const;
         map<Point, shared_ptr<Hexagon>> getHexagonsMap() const { return this->_hexagonsMap; }
@@ -51,6 +51,8 @@ namespace ariel
         bool hasRoad(shared_ptr<Vertex> v1, shared_ptr<Vertex> v2) const;
         shared_ptr<Trail> getTrail(shared_ptr<Vertex> v1, shared_ptr<Vertex> v2) const;
         void placeRoad(shared_ptr<Vertex> v1, shared_ptr<Vertex> v2, const Player* owner);
+        shared_ptr<Hexagon> getRobberHexagon() const;
+        void printBoard();
         
         
     };

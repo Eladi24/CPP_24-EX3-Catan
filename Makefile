@@ -11,6 +11,8 @@ LIB_SRC = Board.cpp Cashbox.cpp Catan.cpp City.cpp Hexagon.cpp Player.cpp Point.
 		Structure.cpp Trail.cpp Vertex.cpp Types.cpp KnightCard.cpp ProgressCard.cpp \
 		VictoryPointCard.cpp
 
+TEST_SRC = TestCounter.cpp Test.cpp
+
 # Catan library object files
 LIB_OBJ = $(subst .cpp,.o,$(LIB_SRC))
 # Catan library header files
@@ -23,13 +25,16 @@ LIB = libCatan.a
 # Doctest flags
 DOCTEST_FLAGS = -std=c++11 -I doctest
 
-all: Main Demo
+all: Main Demo Test
 
 Main: Main.o $(LIB)
 	$(CXX) $(CXXFLAGS) -o Main Main.o $(LIB) $(LDFLAGS)
 
 Demo: Demo.o $(LIB)
 	$(CXX) $(CXXFLAGS) -o Demo Demo.o $(LIB) $(LDFLAGS)
+
+Test: TestCounter.o Test.o $(LIB)
+	$(CXX) $(CXXFLAGS) -o Test TestCounter.o Test.o $(LIB) $(LDFLAGS)
 
 %.o: %.cpp $(LIB_HDR)
 	$(CXX) $(CXXFLAGS) --compile $< -o $@
@@ -41,12 +46,12 @@ Valgrind_demo: Demo
 	valgrind $(VALGRIND_FLAGS) ./Demo
 
 Valgrind_main: Main
-	valgrind --leak-check=full --track-origins=yes ./Main
+	valgrind $(VALGRIND_FLAGS) ./Main
 
 .PHONY: clean all
 
 clean:
-	rm -f *.o *.a Main Demo
+	rm -f *.o *.a Main Demo Test valgrind-out.txt
 
 
 

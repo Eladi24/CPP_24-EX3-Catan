@@ -132,6 +132,8 @@ void Board::initHexagons()
     shared_ptr<Hexagon> hex10 = make_shared<Hexagon>(LandType::Desert, 0, center10, 10);
 
     hex10->initHexagon(_verticesMap, _edgesMap);
+    // Set the robber on the desert hexagon
+    hex10->setRobber(true);
     this->_hexagonGrid[2][2] = hex10;
     this->_hexagonsMap[center10] = hex10;
     x += rightMove;
@@ -217,7 +219,7 @@ void Board::printBoard(sf::RenderWindow &window)
     int windowHeight = window.getSize().y;
     int windowWidth = window.getSize().x;
     int n = this->_hexagonGrid.size();
-
+    sf::CircleShape robber;
     double horizSpacing = sqrt(3) * radius; // Horizontal distance between centers of adjacent hexagons
     double vertSpacing = 1.5 * radius;      // Vertical distance between centers of adjacent hexagons
 
@@ -225,7 +227,7 @@ void Board::printBoard(sf::RenderWindow &window)
     double totalGridWidth = (this->_hexagonGrid[0].size() - 1) * horizSpacing + radius * 2;
     double totalGridHeight = n * vertSpacing + radius;
     double xOffset = (windowWidth - totalGridWidth) / 2;
-    double yOffset = (windowHeight - totalGridHeight) / 2;
+    double yOffset = (windowHeight - totalGridHeight) / 1;
 
     sf::Font font;
     if (!font.loadFromFile("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"))
@@ -285,10 +287,23 @@ void Board::printBoard(sf::RenderWindow &window)
                     break;
                 }
 
+                // Set color for the robber
+                if (this->_hexagonGrid[i][j]->hasRobber())
+                {
+                    cout << "Robber found at: " << i << ", " << j << endl;
+                    // Add the robber as a fill on the center of the hexagon
+                    robber = sf::CircleShape(20, 3);
+                    robber.setOrigin(20, 20);
+                    robber.setPosition(x, y);
+                    robber.setFillColor(sf::Color::Black);
+                }
+                
+
                 // Create the text
                 sf::Text text;
                 text.setFont(font);
-                text.setString(this->_hexagonGrid[i][j]->getLandTypeString());
+                string value = to_string(this->_hexagonGrid[i][j]->getValue()) + " " + this->_hexagonGrid[i][j]->getLandTypeString();
+                text.setString(value);
                 text.setCharacterSize(10); // Adjust size as needed
                 text.setFillColor(sf::Color::Black);
                 sf::FloatRect textRect = text.getLocalBounds();
@@ -298,8 +313,32 @@ void Board::printBoard(sf::RenderWindow &window)
                 // Draw the hexagon and text
                 window.draw(hexagon);
                 window.draw(text);
+                if (this->_hexagonGrid[i][j]->hasRobber())
+                {
+                    window.draw(robber);
+                }
             }
         }
+    }
+}
+
+void Board::printBoard()
+{
+    sf::RenderWindow window(sf::VideoMode(800, 600, 32), "Catan Board");
+    window.setVerticalSyncEnabled(true);
+    while (window.isOpen())
+    {
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)
+                window.close();
+        }
+        window.clear();
+        printBoard(window);
+        window.display();
+        sf::sleep(sf::seconds(5));
+        window.close();
     }
 }
 
@@ -311,13 +350,13 @@ shared_ptr<Vertex> Board::getVertex(vector<LandType> &places, vector<int> &place
     }
 
     // Find vertices for the first hexagon
-    map <VertexLocation, shared_ptr<Vertex>> hex1Vertices;
+    map<VertexLocation, weak_ptr<Vertex>> hex1Vertices;
     bool firstHexagonFound = false;
     for (const auto &[key, hex] : this->_hexagonsMap)
     {
         if (hex->getLandType() == places[0] && hex->getValue() == placesNum[0])
         {
-            
+
             hex1Vertices = hex->getVerticesMap();
 
             firstHexagonFound = true;
@@ -336,17 +375,16 @@ shared_ptr<Vertex> Board::getVertex(vector<LandType> &places, vector<int> &place
     {
         if (hex->getLandType() == places[1] && hex->getValue() == placesNum[1])
         {
-            
-            
-            const map<VertexLocation, shared_ptr<Vertex>> hex2Vertices = hex->getVerticesMap();
+
+            const map<VertexLocation, weak_ptr<Vertex>> hex2Vertices = hex->getVerticesMap();
             for (const auto &[location, vertex] : hex2Vertices)
             {
                 for (const auto &[location1, vertex1] : hex1Vertices)
                 {
-                    if (vertex == vertex1)
+                    if (vertex.lock() == vertex1.lock())
                     {
-                       
-                        return vertex;
+
+                        return vertex.lock();
                     }
                 }
             }
@@ -389,7 +427,7 @@ bool Board::vertexMatches(shared_ptr<Vertex> v, vector<LandType> &places, vector
 
     // Track found places
     int matchCount = 0;
-    cout << "Number of hexagons: " << v->getHexagons().size() << endl;
+
     for (const auto &hex : v->getHexagons())
     {
         if (!hex.expired())
@@ -416,7 +454,7 @@ bool Board::vertexMatches(shared_ptr<Vertex> v, vector<LandType> &places, vector
 vector<shared_ptr<Vertex>> Board::getNeighborVertices(shared_ptr<Vertex> v) const
 {
     vector<shared_ptr<Vertex>> neighbors;
-    cout << "Number of trails: " << v->getTrails().size() << endl;
+
     for (const auto &trail : v->getTrails())
     {
         if (!trail.expired())
@@ -447,3 +485,14 @@ shared_ptr<Trail> Board::getTrail(shared_ptr<Vertex> v1, shared_ptr<Vertex> v2) 
     return v1->getTrail(v2);
 }
 
+shared_ptr<Hexagon> Board::getRobberHexagon() const
+{
+    for (const auto &[key, hex] : this->_hexagonsMap)
+    {
+        if (hex->hasRobber())
+        {
+            return hex;
+        }
+    }
+    return nullptr;
+}

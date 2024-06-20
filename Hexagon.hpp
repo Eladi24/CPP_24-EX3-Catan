@@ -44,9 +44,10 @@ namespace ariel
             int id;
             Point _center;
             // A set map of the vertices. The keys are the names of the vertices and the values are the vertices themselves.
-            map<VertexLocation, shared_ptr<Vertex>> _verticesMap;
+            map<VertexLocation, weak_ptr<Vertex>> _verticesMap;
             // A set map of the edges. The keys are the names of the edges and the values are the edges themselves.
-            map<TrailLocation, shared_ptr<Trail>> _edgesMap;
+            map<TrailLocation, weak_ptr<Trail>> _edgesMap;
+            bool _hasRobber;
             static int hexagonCounter;
             static int EdgeCounter;
             const double HEXAGON_RADIUS = 2;
@@ -58,7 +59,7 @@ namespace ariel
         public:
             
             Hexagon(LandType landType, int value, Point &center, int id);
-            Hexagon(): enable_shared_from_this<Hexagon>(), _landType(LandType::None), _resourceType(ResourceType::None), _value(0), id(0), _center(Point(0,0)), _verticesMap(), _edgesMap() {} 
+            Hexagon(): enable_shared_from_this<Hexagon>(), _landType(LandType::None), _resourceType(ResourceType::None), _value(0), id(0), _center(Point(0,0)), _verticesMap(), _edgesMap(), _hasRobber(false) {} 
             ~Hexagon();
             void initResources();
             ResourceType getResourceType() const { return _resourceType;}
@@ -68,12 +69,14 @@ namespace ariel
             void initHexagon( map<Point, vector<shared_ptr<Vertex>>>& verticesMap, map<Point, vector<shared_ptr<Trail>>>& edgesMap);
             int getId() const { return id;}
             Point getCenter() const { return _center;}
-            const map<VertexLocation, shared_ptr<Vertex>> getVerticesMap() const { return _verticesMap;}
-            const map<TrailLocation, shared_ptr<Trail>> getEdgesMap() const { return _edgesMap;}
+            const map<VertexLocation, weak_ptr<Vertex>> getVerticesMap() const { return _verticesMap;}
+            const map<TrailLocation, weak_ptr<Trail>> getEdgesMap() const { return _edgesMap;}
             
             string getLandTypeString();
             const double getHexagonRadius() const { return HEXAGON_RADIUS;}
             bool operator==(const Hexagon& other) const;
+            bool hasRobber() const { return _hasRobber;}
+            void setRobber(bool hasRobber) { _hasRobber = hasRobber;}
             
            
             

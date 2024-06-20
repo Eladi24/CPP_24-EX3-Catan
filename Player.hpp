@@ -70,6 +70,13 @@ namespace ariel
         void setStartingPhase(bool isStartingPhase) { this->_isStatringPhase = isStartingPhase; }
         void addStructure(Structure* structure, shared_ptr<Vertex> v) { this->_structures[v] = structure; }
         void addRoad(Road* road, shared_ptr<Trail> t) { this->_roads[t] = road; }
+        int getTotalResources();
+        bool getIsTurn() const { return this->_isTurn; }
+
+        // Methods for moving the robber
+        void moveRobber(Board& board);
+        void stealResource(Player* p, ResourceType type);
+        
 
     };
 } // namespace ariel

@@ -12,13 +12,16 @@ Player::~Player()
     
 }
 
+
 void Player::initPlayer()
 {
+    // Create vector of resource cards for each resource type
     for (auto &[resource, cards] : this->_resourceCards)
     {
         this->_resourceCards[resource] = vector<ResourceCard>();
     }
 
+    // Create vector of development cards for each card type
     for (auto &[cardType, devCards] : this->_devCards)
     {
         this->_devCards[cardType] = vector<DevCard*>();
@@ -28,7 +31,7 @@ void Player::initPlayer()
 
 int Player::rollDice()
 {
-    
+    // Player can only roll the dice if it is their turn or the starting phase
     if (this->_isTurn || this->_isStatringPhase)
     {
         return this->_die1.roll() + this->_die2.roll();
@@ -42,12 +45,21 @@ int Player::rollDice()
 
 void Player::endTurn()
 {
-    this->_isTurn = false;
+    cout << "Player " << this->_name << " has ended their turn." << endl;
 }
 
 bool Player::trade(Player pToTrade, ResourceType resourceToGive, ResourceType resourceToGet, uint amountToGive, uint amountToGet)
 {
     TradeRequest request = {resourceToGive, resourceToGet, amountToGive, amountToGet};
+
+    // Check if the player has the required amount of resources to trade
+    if (!this->canTrade(request))
+    {
+        cout << "Player " << this->_name << " does not have enough resources to trade" << endl;
+        return false;
+    }
+
+    // If the other player accepts the trade, trade the resources
     if (pToTrade.reviewTradeRequest(request) == true)
     {
         for (size_t i = 0; i < amountToGive; i++)
@@ -62,9 +74,12 @@ bool Player::trade(Player pToTrade, ResourceType resourceToGive, ResourceType re
             ResourceCard card = pToTrade._resourceCards[resourceToGet].back();
             pToTrade._resourceCards[resourceToGet].pop_back();
             this->_resourceCards[resourceToGet].push_back(card);
-        
         }
+        cout<<"Player "<<this->_name<<" has traded with player "<<pToTrade.getName()<<
+        "The resources traded are: "<<amountToGive<<" "<<resourceToGive<<" for "<<amountToGet<<" "<<resourceToGet<<endl;
+        return true;
     }
+    cout << "Player " << pToTrade.getName() << " has rejected the trade request with player " << this->_name << endl;
     return false;
 }
 
@@ -104,14 +119,22 @@ void Player::addResource(ResourceType resource, Cashbox &cashbox, size_t amount)
     }
 
     for (size_t i = 0; i < amount; i++)
-    {
-        ResourceCard card = cashbox.drawResourceCard(resource);
-        this->_resourceCards[resource].push_back(card);
+    {   
+        // Draw a resource card from the cashbox and add it to the player's resource cards
+        try {
+            ResourceCard card = cashbox.drawResourceCard(resource);
+            this->_resourceCards[resource].push_back(card);
+        }
+        catch (const invalid_argument &e)
+        {
+            cout << e.what() << endl;
+        }
     }
 }
 
 void Player::removeResource(ResourceType resource, Cashbox &cashbox, size_t amount)
 {
+    // Check if the player has enough resources to remove
     if (this->_resourceCards[resource].size() == 0 || this->_resourceCards[resource].size() < amount)
     {
         throw invalid_argument("Player does not have enough resources to remove");
@@ -132,14 +155,17 @@ void Player::printPoints()
 }
 
 void Player::buyDevelopmentCard(Cashbox &cashbox)
-{
+{   
+    // Check if the player can afford a development card
     if (cashbox.canAffordDevCard(*this))
     {
+        // Gets the card type from the top of the deck, it's the key to the map
         CardType cardType = cashbox.peekDeck();
 
         DevCard* card = cashbox.drawDevCard();
         card->setOwner(this);
         this->_devCards[cardType].push_back(card);
+        cout << "Player " << this->_name << " has bought a development card." << endl;
     }
 }
 
@@ -178,11 +204,13 @@ void Player::removeVictoryPoints(int points)
 
 void Player::placeSettelemnt(vector<LandType> places, vector<int> placesNum, Board &board, Cashbox &cashbox)
 {
+    
     if (places.size() != 2 || placesNum.size() != 2)
     {
         throw invalid_argument("Invalid number of arguments");
     }
 
+    // Check if the player can afford to build a settlement, unless it's the starting phase
     if (!this->canAffordSettlement() && !this->_isStatringPhase)
     {
         throw invalid_argument("Player cannot afford to build a settlement");
@@ -198,7 +226,7 @@ void Player::placeSettelemnt(vector<LandType> places, vector<int> placesNum, Boa
     {
         throw invalid_argument("Vertex already has a structure");
     }
-    cout << "Available vertex was found at (" << vertex->getX() << ", " << vertex->getY() << ")" << endl;
+    
     vertex->buildSettlement(this);
     this->_structures[vertex] = vertex->getStructure();
     // Add victory points
@@ -215,6 +243,8 @@ void Player::placeRoad(vector<LandType> places, vector<int> placesNum, Board &bo
         throw std::invalid_argument("Must specify exactly two places and their numbers.");
     }
 
+    
+
     // Get the two vertices where the road is supposed to be placed
     shared_ptr<Vertex> v1 = board.getVertex(places, placesNum);
 
@@ -222,7 +252,7 @@ void Player::placeRoad(vector<LandType> places, vector<int> placesNum, Board &bo
     {
         throw std::invalid_argument("Cannot build a road");
     }
-    cout << "v1: at (" << v1->getX() << ", " << v1->getY() << ")" << endl;
+    
 
     if (!v1)
     {
@@ -244,7 +274,7 @@ void Player::placeRoad(vector<LandType> places, vector<int> placesNum, Board &bo
         if (board.vertexMatches(neighbor, places, placesNum))
         {
             v2 = neighbor;
-            cout << "A matching neighbor was found" << endl;
+            
             break;
         }
     }
@@ -387,3 +417,84 @@ size_t Player::getResourceAmount(ResourceType resource) const
 
     return this->_resourceCards.at(resource).size();
 }
+
+int Player::getTotalResources()
+{
+    int total = 0;
+    for (auto &[resource, cards] : this->_resourceCards)
+    {
+        total += cards.size();
+    }
+
+    return total;
+}
+
+bool Player::canAffordCity()
+{
+    return this->_resourceCards[ResourceType::Ore].size() >= 3 && this->_resourceCards[ResourceType::Grain].size() >= 2;
+}
+
+void Player::moveRobber(Board &board)
+{
+    // Check the board for the hexagon with the robber
+    shared_ptr<Hexagon> hex = board.getRobberHexagon();
+    if (hex == nullptr)
+    {
+        throw invalid_argument("Robber hexagon not found");
+    }
+
+    // Move the robber to a new hexagon with the strategy of moving to the hexagon with 2 players that are not the current player
+    shared_ptr<Hexagon> newHex = nullptr;
+    int playerCount = 0;
+    for (const auto &[key, hexagon] : board.getHexagonsMap())
+    {
+        if (!hexagon->hasRobber())
+        {
+            int count = 0;
+            for (const auto &[vertexKey, vertex] : hexagon->getVerticesMap())
+            {
+                if ((vertex.lock())->getStructure() != nullptr)
+                {
+                    if ((vertex.lock())->getStructure()->getOwner() != this)
+                    {
+                        count++;
+                    }
+                }
+            }
+
+            if (count == 2)
+            {
+                newHex = hexagon;
+                playerCount = count;
+                break;
+            }
+        }
+    }
+    if (newHex == nullptr)
+    {
+        throw invalid_argument("No hexagon found to move the robber to");
+    }
+
+    // Move the robber to the new hexagon
+    hex->setRobber(false);
+    newHex->setRobber(true);
+    cout << "Robber has been moved to hexagon " << newHex->getLandType() << "on ("
+    << newHex->getCenter().getX() << ", " << newHex->getCenter().getY() << ")" << endl;
+    
+}
+
+void Player::stealResource(Player* robber, ResourceType resource)
+{
+    // Check if the player has the resource to steal
+    if (this->_resourceCards[resource].size() == 0)
+    {
+        throw invalid_argument("Player does not have the resource to steal");
+    }
+
+    // Steal the resource
+    ResourceCard card = this->_resourceCards[resource].back();
+    this->_resourceCards[resource].pop_back();
+    robber->_resourceCards[resource].push_back(card);
+    cout << "Player " << this->_name << " has stolen a " << resource << " card from player " << robber->getName() << endl;
+}
+

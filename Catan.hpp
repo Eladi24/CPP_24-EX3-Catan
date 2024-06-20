@@ -15,9 +15,9 @@ namespace ariel
     class Catan
     {
     private:
-        Player _p1;
-        Player _p2;
-        Player _p3;
+        Player*& _p1;
+        Player*& _p2;
+        Player*& _p3;
         Board _board;
         Cashbox _cashbox;
         Die _die1;
@@ -28,12 +28,13 @@ namespace ariel
         GamePhase _gamePhase;
         
         Player& checkWinner();
+        
 
 
             
         
     public:
-        Catan(Player p1, Player p2, Player p3): _p1(p1), _p2(p2), _p3(p3), _board(), _cashbox(), _turnCounter(0), _currentPlayerIndex(0), roundCounter(0), _gamePhase(SETUP) {}
+        Catan(Player*& p1, Player*& p2, Player*& p3): _p1(p1), _p2(p2), _p3(p3), _board(), _cashbox(), _turnCounter(0), _currentPlayerIndex(0), roundCounter(0), _gamePhase(SETUP) {}
         
         ~Catan();
         
@@ -43,9 +44,12 @@ namespace ariel
         void printWinner();
         void changeTurn();
         void yieldResources(int diceRoll);
-        void setGamePhase(GamePhase gamePhase); 
+        void setGamePhase(GamePhase gamePhase);
+        void swapPlayers(Player*& p1, Player*& p2);
         
-        
+        void turnCycleChange();
+
+        void analyzeDiceRoll(int roll_sum, Player*& currentPlayer); 
 
 
     };
