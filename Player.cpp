@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include "Cashbox.hpp"
+#include "ProgressCard.hpp"
 #include "Player.hpp"
 
 using namespace std;
@@ -9,7 +10,13 @@ using namespace ariel;
 
 Player::~Player()
 {
-    
+    for (auto &[cardType, devCards] : this->_devCards)
+    {
+        for (auto &card : devCards)
+        {
+            delete card;
+        }
+    }
 }
 
 
@@ -164,8 +171,12 @@ void Player::buyDevelopmentCard(Cashbox &cashbox)
 
         DevCard* card = cashbox.drawDevCard();
         card->setOwner(this);
-        this->_devCards[cardType].push_back(card);
-        cout << "Player " << this->_name << " has bought a development card." << endl;
+        this->_devCards[cardType].push_back(move(card));
+        cout << "Player " << this->_name << " has bought a " << cardType << " card." << endl;
+    }
+    else
+    {
+        cout << "Player " << this->_name << " cannot afford a development card." << endl;
     }
 }
 
@@ -478,7 +489,7 @@ void Player::moveRobber(Board &board)
     // Move the robber to the new hexagon
     hex->setRobber(false);
     newHex->setRobber(true);
-    cout << "Robber has been moved to hexagon " << newHex->getLandType() << "on ("
+    cout << "Robber has been moved to hexagon " << newHex->getLandType() << " on ("
     << newHex->getCenter().getX() << ", " << newHex->getCenter().getY() << ")" << endl;
     
 }
@@ -496,5 +507,111 @@ void Player::stealResource(Player* robber, ResourceType resource)
     this->_resourceCards[resource].pop_back();
     robber->_resourceCards[resource].push_back(card);
     cout << "Player " << this->_name << " has stolen a " << resource << " card from player " << robber->getName() << endl;
+}
+
+
+void Player::activateDevCard(Board &board, Cashbox &cashbox, vector<Player*> players)
+{
+    // Check if the player has a dev card to activate
+    if (this->_devCards.size() == 0)
+    {
+        throw invalid_argument("Player does not have a dev card to activate");
+    }
+
+    // Randomly select a dev card to activate
+    int index = rand() % this->_devCards.size();
+    auto it = this->_devCards.begin();
+    advance(it, index);
+    DevCard* card = it->second.back();
+    devCardAction action = card->activate();
+
+    switch(action)
+    {
+        case devCardAction::GET_2_FREE_RESOURCES:
+        {
+            // Get 2 free resources
+            vector<ResourceType> resources = {ResourceType::Brick, ResourceType::Wood, ResourceType::Wool, ResourceType::Grain, ResourceType::Ore};
+            for (int i = 0; i < 2; i++)
+            {
+                int index = rand() % resources.size();
+                this->addResource(resources[index], cashbox, 1);
+            }
+            break;
+        }
+
+        case devCardAction::GET_MONOPOLY_RESOURCES:
+        {
+            // Get all resources of a single type from all players
+            vector<ResourceType> resources = {ResourceType::Brick, ResourceType::Wood, ResourceType::Wool, ResourceType::Grain, ResourceType::Ore};
+            int index = rand() % resources.size();
+            ResourceType resource = resources[index];
+            for (auto &player : players)
+            {
+                if (player != this)
+                {
+                    size_t amount = player->getResourceAmount(resource);
+                    for (size_t i = 0; i < amount; i++)
+                    {
+                        ResourceCard card = player->_resourceCards[resource].back();
+                        player->_resourceCards[resource].pop_back();
+                        this->_resourceCards[resource].push_back(card);
+                    }
+                }
+            }
+            break;
+        }
+
+        case devCardAction::ACT_AS_ROBBER:
+        {
+            // Move the robber
+            this->moveRobber(board);
+            break;
+        }
+
+        case devCardAction::GET_VICTORY_POINT:
+        {
+            // Get a victory point
+            this->addVictoryPoints(1);
+            break;
+        }
+
+        case devCardAction::GET_2_FREE_ROADS:
+        {
+            // Set the isStartingPhase to true so the player can build 2 free roads
+            this->setStartingPhase(true);
+            // Select random owend vertices/roads to build the roads
+            vector<shared_ptr<Vertex>> vertices;
+            for (auto &[vertex, structure] : this->_structures)
+            {
+                vertices.push_back(vertex);
+            }
+
+            for (int i = 0; i < 2; i++)
+            {
+                int index = rand() % vertices.size();
+                shared_ptr<Vertex> v1 = vertices[index];
+                vertices.erase(vertices.begin() + index);
+
+                vector<shared_ptr<Vertex>> neighbors = board.getNeighborVertices(v1);
+                index = rand() % neighbors.size();
+                shared_ptr<Vertex> v2 = neighbors[index];
+
+                // Place the road
+                shared_ptr<Trail> trail = board.getTrail(v1, v2);
+                trail->setRoad(this);
+                this->_roads[trail] = trail->getRoad();
+            }
+            break;
+        }
+
+        default:
+        {
+            throw invalid_argument("Invalid dev card action");
+        }
+    }
+
+    
+
+     
 }
 

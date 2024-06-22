@@ -9,16 +9,16 @@ using namespace std;
 using namespace ariel;
 
 // Constructor
-// Cashbox::Cashbox()
-// {
-//     this->init();
-// }
+Cashbox::Cashbox()
+{
+    this->init();
+}
 
 // Destructor
 Cashbox::~Cashbox()
 {
-    // Delete the development cards
-    for (DevCard* card : devCards)
+    
+    for (auto& card : devCards)
     {
         delete card;
     }
@@ -32,39 +32,35 @@ void Cashbox::init()
      // Initialize the development cards
     for (int i = 0; i < 14; i++)
     {
+        
         DevCard* knight = new KnightCard();
-        devCards.push_back(knight);
+        devCards.push_back(move(knight));
     }
 
     for (int i = 0; i < 5; i++)
     {
         DevCard* victoryPoint = new VictoryPointCard();
-        devCards.push_back(victoryPoint);
+        devCards.push_back(move(victoryPoint));
     }
 
     for (int i = 0; i < 2; i++)
     {
-        DevCard* roadBuilding = new ProgressCard(CardType::PROGRESS, 2, SubCardType::ROAD_BUILDING);
-        devCards.push_back(roadBuilding);
+        DevCard* roadBuilding = new RoadBuilding(CardType::PROGRESS);
+        devCards.push_back(move(roadBuilding));
+
+        DevCard* yearOfPlenty = new YearOfPlenty(CardType::PROGRESS);
+        devCards.push_back(move(yearOfPlenty));
+
+        DevCard* monopoly = new Monopoly(CardType::PROGRESS);
+        devCards.push_back(move(monopoly));
     }
+    this->shuffleDevCards();
 
-    for (int i = 0; i < 2; i++)
-    {
-        DevCard* yearOfPlenty = new ProgressCard (CardType::PROGRESS, 2, SubCardType::YEAR_OF_PLENTY);
-        devCards.push_back(yearOfPlenty);
-    }
+    // DevCard& largestArmy = new ProgressCard(CardType::PROGRESS, 2, SubCardType::LARGEST_ARMY);
+    // devCards.push_back(largestArmy);
 
-    for (int i = 0; i < 2; i++)
-    {
-        DevCard* monopoly = new ProgressCard (CardType::PROGRESS, 2, SubCardType::MONOPOLY);
-        devCards.push_back(monopoly);
-    }
-
-    DevCard* largestArmy = new ProgressCard(CardType::PROGRESS, 2, SubCardType::LARGEST_ARMY);
-    devCards.push_back(largestArmy);
-
-    DevCard* longestRoad = new ProgressCard(CardType::PROGRESS, 2, SubCardType::LONGEST_ROAD); 
-    devCards.push_back(longestRoad);
+    // DevCard& longestRoad = new ProgressCard(CardType::PROGRESS, 2, SubCardType::LONGEST_ROAD); 
+    // devCards.push_back(longestRoad);
 
     // Initialize the resource cards
 
@@ -117,7 +113,7 @@ DevCard* Cashbox::drawDevCard()
         throw invalid_argument("No development cards left in the deck");
     }
     // Draw a development card
-    DevCard* card = devCards.back();
+    DevCard* card = move(devCards.back());
     // Remove the card from the deck, needs to be deleted by the caller
     devCards.pop_back();
     
@@ -179,7 +175,7 @@ ResourceCard Cashbox::drawResourceCard(ResourceType type)
 void Cashbox::returnDevCard(DevCard* card)
 {
     // Return a development card to the deck
-    devCards.push_back(card);
+    devCards.push_back(move(card));
 }
 
 void Cashbox::returnResourceCard(ResourceCard card)
@@ -256,6 +252,13 @@ CardType Cashbox::peekDeck()
     return devCards.back()->getCardType();
 }
 
+void Cashbox::printDeck()
+{
+    for (auto& card : devCards)
+    {
+        cout << card->getCardType() << endl;
+    }
+}
 
 
 

@@ -76,6 +76,7 @@ namespace ariel
         // Methods for moving the robber
         void moveRobber(Board& board);
         void stealResource(Player* p, ResourceType type);
+        void activateDevCard(Board& board, Cashbox& cashbox, vector<Player*> players);
         
 
     };

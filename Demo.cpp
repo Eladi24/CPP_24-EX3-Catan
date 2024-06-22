@@ -25,8 +25,9 @@ int main()
     // Starting of the game. Every player places two settlements and two roads.
     catan.setGamePhase(GamePhase::SETUP);
     catan.ChooseStartingPlayer();   // should print the name of the starting player, assume it is Amit.
-    Board board = catan.getBoard(); // get the board of the game.
-    Cashbox cashbox = catan.getCashbox(); // get the cashbox of the game.
+    Board& board = catan.getBoard(); // get the board of the game.
+    Cashbox& cashbox = catan.getCashbox(); // get the cashbox of the game.
+    cashbox.printDeck(); // print the deck of the cashbox.
     vector<LandType> places = {LandType::Forest, LandType::Hills};
     vector<int> placesNum = {11, 6};
     p1->placeSettelemnt(places, placesNum, board, cashbox);
@@ -112,6 +113,14 @@ int main()
 
     try {
             p2->buyDevelopmentCard(cashbox); // p2 buys a development card. Lets say it is a bonus points card.
+    }
+    catch (const std::exception &e)
+    {
+        cout << e.what() << endl;
+    }
+
+    try {
+        p2->activateDevCard(board, cashbox, {p1, p2, p3}); // p2 activates the bonus points card.
     }
     catch (const std::exception &e)
     {

@@ -14,21 +14,21 @@ namespace ariel
     {
     private:
         CardType _type;
-        int _value;
         bool _used;
-        
+
     protected:
         Player* _owner;
+        devCardAction _action;
     public:
-        DevCard(CardType type, int value): _type(type), _value(value), _used(false), _owner(nullptr) {}
+        DevCard(CardType type): _type(type), _used(false), _owner(nullptr) {}
         virtual ~DevCard() = default;
-        virtual void activate() =0;
+        virtual devCardAction activate() = 0;
         bool isUsed() { return _used; }
         void setUsed(bool used) { this->_used = used; }
         CardType getCardType() { return _type ;}
-        int getValue() { return _value; }
         Player* getOwner() { return _owner; }
         void setOwner(Player* owner) { this->_owner = owner; }
+        void setAction(devCardAction action) { this->_action = action; }
         
     };
 } // namespace ariel

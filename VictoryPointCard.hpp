@@ -9,9 +9,9 @@ namespace ariel
     class VictoryPointCard: public DevCard
     {
     public:
-        VictoryPointCard(): DevCard(CardType::VICTORY_POINT,  1) {}
+        VictoryPointCard(): DevCard(CardType::VICTORY_POINT) { _action = devCardAction::GET_VICTORY_POINT; }
         ~VictoryPointCard();
-        void activate() override;
+        devCardAction activate() override;
     };
 }
 

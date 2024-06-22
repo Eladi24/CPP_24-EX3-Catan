@@ -9,9 +9,9 @@ namespace ariel
     class KnightCard: public DevCard
     {
     public:
-        KnightCard(): DevCard(CardType::KNIGHT, 3) {}
+        KnightCard(): DevCard(CardType::KNIGHT) { _action = devCardAction::ACT_AS_ROBBER; }
         ~KnightCard();
-        void activate() override;
+        devCardAction activate() override;
     };
 }
 

@@ -13,34 +13,34 @@ namespace ariel
             SubCardType _subType;
 
         public:
-            ProgressCard(CardType type, int cost, SubCardType subType): DevCard(type, cost), _subType(subType) {}
-            ~ProgressCard();
+            ProgressCard(CardType type, SubCardType subType): DevCard(type), _subType(subType) {}
+            virtual ~ProgressCard() = default;
             SubCardType getSubType() { return _subType; }
-            void activate() override; 
+            virtual devCardAction activate() = 0;
     };
 
-    class YearOfPlenty: public DevCard
+    class YearOfPlenty: public ProgressCard
     {
         public:
-            YearOfPlenty(CardType type, int cost): DevCard(type, cost) {}
+            YearOfPlenty(CardType type): ProgressCard(type, SubCardType::YEAR_OF_PLENTY) {this->setAction(devCardAction::GET_2_FREE_RESOURCES);}
             ~YearOfPlenty();
-            void activate(ResourceType resource1, ResourceType resource2, Cashbox& cashbox);
+            devCardAction activate() override;
     };
 
-    class RoadBuilding: public DevCard
+    class RoadBuilding: public ProgressCard
     {
         public:
-            RoadBuilding(CardType type, int cost): DevCard(type, cost) {}
+            RoadBuilding(CardType type): ProgressCard(type, SubCardType::ROAD_BUILDING) {this->setAction(devCardAction::GET_2_FREE_ROADS);}
             ~RoadBuilding();
-            void activate(vector<LandType> places, vector<int> placesNum, Board& board, Cashbox& cashbox);
+            devCardAction activate() override;
     };
 
-    class Monopoly: public DevCard
+    class Monopoly: public ProgressCard
     {
         public:
-            Monopoly(CardType type, int cost): DevCard(type, cost) {}
+            Monopoly(CardType type): ProgressCard(type, SubCardType::MONOPOLY) {this->setAction(devCardAction::GET_MONOPOLY_RESOURCES);}
             ~Monopoly();
-            void activate(ResourceType resourceToGet, vector<Player*> players);
+            devCardAction activate() override;
     };
 }
 

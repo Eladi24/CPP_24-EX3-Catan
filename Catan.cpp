@@ -9,6 +9,7 @@ Catan::~Catan()
     delete _p1;
     delete _p2;
     delete _p3;
+
 }
 
 void Catan::ChooseStartingPlayer() {
@@ -235,7 +236,13 @@ void Catan::analyzeDiceRoll(int roll_sum, Player*& currentPlayer)
         std::uniform_int_distribution<> dis(0, otherPlayers.size() - 1);
         int randomIndex = dis(gen);
         Player* playerToStealFrom = otherPlayers[randomIndex];
-        playerToStealFrom->stealResource(currentPlayer, robberHex->getResourceType());
+        try {
+            playerToStealFrom->stealResource(currentPlayer, robberHex->getResourceType());
+        }
+        catch (const invalid_argument &e)
+        {
+            cout << e.what() << endl;
+        }
 
         
     }

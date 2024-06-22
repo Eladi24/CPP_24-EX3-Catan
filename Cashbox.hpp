@@ -32,7 +32,8 @@ namespace ariel
         
         public:
             // Constructor
-            Cashbox(): devCards(25), woodCards(19), brickCards(19), oreCards(19), woolCards(19), grainCards(19) {}
+            // Cashbox(): devCards(25), woodCards(19), brickCards(19), oreCards(19), woolCards(19), grainCards(19) {}
+            Cashbox();
             // Destructor
             ~Cashbox();
 
@@ -60,6 +61,7 @@ namespace ariel
             bool canAffordDevCard(Player& p);
 
             CardType peekDeck();
+            void printDeck();
         
             
     };

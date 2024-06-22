@@ -37,7 +37,12 @@ namespace ariel
     {
         KNIGHT,
         PROGRESS,
-        VICTORY_POINT
+        VICTORY_POINT,
+        ROAD_BUILDING,
+        MONOPOLY,
+        YEAR_OF_PLENTY,
+        LARGEST_ARMY,
+        LONGEST_ROAD
     };
 
     enum class SubCardType
@@ -47,6 +52,15 @@ namespace ariel
         MONOPOLY,
         LARGEST_ARMY,
         LONGEST_ROAD
+    };
+
+    enum class devCardAction
+    {
+        GET_VICTORY_POINT,
+        GET_2_FREE_ROADS,
+        GET_2_FREE_RESOURCES,
+        GET_MONOPOLY_RESOURCES,
+        ACT_AS_ROBBER
     };
 
 
