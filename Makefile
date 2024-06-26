@@ -48,6 +48,9 @@ Valgrind_demo: Demo
 Valgrind_main: Main
 	valgrind $(VALGRIND_FLAGS) ./Main
 
+Valgrind_test: Test
+	valgrind $(VALGRIND_FLAGS) ./Test
+
 .PHONY: clean all
 
 clean:

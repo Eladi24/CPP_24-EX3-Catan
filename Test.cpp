@@ -47,7 +47,7 @@ TEST_CASE("Removing too many resources")
     p1.addResource(ResourceType::Wood, c, 3);
     p1.addResource(ResourceType::Brick, c, 3);
     CHECK_NOTHROW(p1.removeResource(ResourceType::Wood, c, 3));
-    
+    // Free the memory allocated in Cashbox
 }
 
 TEST_CASE("Adding too many points")
@@ -70,6 +70,103 @@ TEST_CASE("Removing too many points")
     CHECK_NOTHROW(p1.removeVictoryPoints(1));
     CHECK_THROWS(p1.removeVictoryPoints(-2));
 }
+
+TEST_CASE("Setteling on invalid vertex")
+{
+    Player p1 = Player("p1");
+    Board b = Board();
+    Cashbox c = Cashbox();
+    p1.setTurn(true);
+    CHECK_THROWS(p1.placeSettelemnt({LandType::Hills, LandType::Hills}, {1, 2}, b, c));
+    CHECK_THROWS(p1.placeSettelemnt({LandType::Hills, LandType::Hills}, {1, 1}, b, c));
+    // Check not throwing when setteling on valid vertex
+    CHECK_NOTHROW(p1.placeSettelemnt({LandType::Pasture, LandType::Forest}, {2, 9}, b, c));
+
+}
+
+TEST_CASE("Placing road on invalid trail")
+{
+    Player p1 = Player("p1");
+    Board b = Board();
+    Cashbox c = Cashbox();
+    p1.setTurn(true);
+    CHECK_THROWS(p1.placeRoad({LandType::Hills, LandType::Hills}, {1, 2}, b, c));
+    CHECK_THROWS(p1.placeRoad({LandType::Hills, LandType::Hills}, {1, 1}, b, c));
+    // Check not throwing when placing road on valid trail
+    CHECK_NOTHROW(p1.placeSettelemnt({LandType::Pasture, LandType::Forest}, {2, 9}, b, c));
+    CHECK_NOTHROW(p1.placeRoad({LandType::Pasture, LandType::Forest}, {2, 9}, b, c));
+}
+
+TEST_CASE("Placing city on invalid vertex")
+{
+    Player p1 = Player("p1");
+    Board b = Board();
+    Cashbox c = Cashbox();
+    p1.setTurn(true);
+    CHECK_THROWS(p1.placeSettelemnt({LandType::Hills, LandType::Hills}, {1, 2}, b, c));
+    CHECK_THROWS(p1.placeSettelemnt({LandType::Hills, LandType::Hills}, {1, 1}, b, c));
+    CHECK_THROWS(p1.placeRoad({LandType::Pasture, LandType::Forest}, {2, 9}, b, c));
+    // Check not throwing when placing city on valid vertex
+    CHECK_NOTHROW(p1.placeSettelemnt({LandType::Pasture, LandType::Forest}, {2, 9}, b, c));
+    CHECK_THROWS(p1.placeCity({LandType::Pasture, LandType::Forest}, {2, 9}, b, c));
+    // Adding the required resources for building a city
+    p1.addResource(ResourceType::Grain, c, 2);
+    p1.addResource(ResourceType::Ore, c, 3);
+    CHECK_NOTHROW(p1.placeCity({LandType::Pasture, LandType::Forest}, {2, 9}, b, c));
+}
+
+TEST_CASE("Drawing from an empty deck")
+{
+    Cashbox c = Cashbox();
+    // Draw all the cards from the deck
+    for (int i = 0; i < 25; i++)
+    {
+        DevCard* card = c.drawDevCard();
+        delete card;
+    }
+
+    CHECK_THROWS(c.drawDevCard());
+
+    // Draw all the cards from the deck
+    for (int i = 0; i < 19; i++)
+    {
+        c.drawResourceCard(ResourceType::Wood);
+        c.drawResourceCard(ResourceType::Brick);
+        c.drawResourceCard(ResourceType::Ore);
+        c.drawResourceCard(ResourceType::Wool);
+        c.drawResourceCard(ResourceType::Grain);
+    }
+
+    CHECK_THROWS(c.drawResourceCard(ResourceType::Wood));
+    CHECK_THROWS(c.drawResourceCard(ResourceType::Brick));
+    CHECK_THROWS(c.drawResourceCard(ResourceType::Ore));
+    CHECK_THROWS(c.drawResourceCard(ResourceType::Wool));
+    CHECK_THROWS(c.drawResourceCard(ResourceType::Grain));
+    
+}
+
+TEST_CASE("Building a road without a settlement")
+{
+    Player p1 = Player("p1");
+    Board b = Board();
+    Cashbox c = Cashbox();
+    p1.setTurn(true);
+    CHECK_THROWS(p1.placeRoad({LandType::Hills, LandType::Hills}, {1, 2}, b, c));
+    CHECK_THROWS(p1.placeRoad({LandType::Hills, LandType::Hills}, {1, 1}, b, c));
+    CHECK_THROWS(p1.placeRoad({LandType::Pasture, LandType::Forest}, {2, 9}, b, c));
+    CHECK_NOTHROW(p1.placeSettelemnt({LandType::Pasture, LandType::Forest}, {2, 9}, b, c));
+    CHECK_NOTHROW(p1.placeRoad({LandType::Pasture, LandType::Forest}, {2, 9}, b, c));
+}
+
+TEST_CASE("Trying to cause memory leak")
+{
+    Player p1 = Player("p1");
+    Board b = Board();
+    Cashbox c = Cashbox();
+    p1.setTurn(true);
+    
+}
+
 
 
 

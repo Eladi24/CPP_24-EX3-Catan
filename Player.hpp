@@ -45,6 +45,7 @@ namespace ariel
         ~Player();
         void placeSettelemnt(vector<LandType> places, vector<int> placesNum, Board& board, Cashbox& cashbox);
         void placeRoad(vector<LandType> places, vector<int> placesNum, Board& board, Cashbox& cashbox);
+        void placeCity(vector<LandType> places, vector<int> placesNum, Board& board, Cashbox& cashbox);
         int rollDice();
         void endTurn();
         bool trade(Player pToTrade, ResourceType resourceToGive, ResourceType resourceToGet, uint amountToGive, uint amountToGet);

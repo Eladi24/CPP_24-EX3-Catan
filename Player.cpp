@@ -357,8 +357,14 @@ void Player::placeRoad(vector<LandType> places, vector<int> placesNum, Board &bo
 
 bool Player::canPlaceRoad(shared_ptr<Vertex> v1, shared_ptr<Vertex> v2)
 {
-    // Check if the player has a settlement or road connected to these vertices
-    if (this->_structures.find(v1) != this->_structures.end() || this->_structures.find(v2) != this->_structures.end())
+    if (!v1 || !v2)
+    {
+        return false;
+    }
+
+    // Check if the player has a settlement connected to these vertices
+    if ((v1->isOccupied() && v1->getStructure()->getOwner() == this) ||
+        (v2->isOccupied() && v2->getStructure()->getOwner() == this))
     {
         return true;
     }
@@ -366,8 +372,9 @@ bool Player::canPlaceRoad(shared_ptr<Vertex> v1, shared_ptr<Vertex> v2)
     // Check if the player has a road connected to these vertices
     for (auto &[trail, road] : this->_roads)
     {
-        if (trail->getStart().lock() == v1 || trail->getEnd().lock() == v1 || trail->getStart().lock() == v2 
-        || trail->getEnd().lock() == v2)
+        if ((trail->getStart().lock() == v1 || trail->getEnd().lock() == v1 ||
+             trail->getStart().lock() == v2 || trail->getEnd().lock() == v2) && 
+             road->getOwner() == this)
         {
             return true;
         }
@@ -375,6 +382,7 @@ bool Player::canPlaceRoad(shared_ptr<Vertex> v1, shared_ptr<Vertex> v2)
 
     return false;
 }
+
 
 bool Player::canPlaceCity(shared_ptr<Vertex> v)
 {
@@ -609,9 +617,40 @@ void Player::activateDevCard(Board &board, Cashbox &cashbox, vector<Player*> pla
             throw invalid_argument("Invalid dev card action");
         }
     }
-
-    
-
      
+}
+
+void Player::placeCity(vector<LandType> places, vector<int> placesNum, Board &board, Cashbox &cashbox)
+{
+
+    if (!this->canAffordCity())
+    {
+        throw invalid_argument("Player cannot afford to build a city");
+    }
+
+    if (places.size() != 2 || placesNum.size() != 2)
+    {
+        throw invalid_argument("Invalid number of arguments");
+    }
+
+    shared_ptr<Vertex> vertex = board.getVertex(places, placesNum);
+    if (vertex == nullptr)
+    {
+        throw invalid_argument("Invalid vertex");
+    }
+
+    if (this->_structures.find(vertex) == this->_structures.end())
+    {
+        throw invalid_argument("Vertex does not have a settlement");
+    }
+    // Build a city
+    vertex->buildCity(this);
+    this->_structures[vertex] = vertex->getStructure();
+    // Add victory points
+    this->addVictoryPoints(1);
+    // Deduct resources
+    this->removeResource(ResourceType::Ore, cashbox, 3);
+    this->removeResource(ResourceType::Grain, cashbox, 2);
+    cout << "Player " << this->_name << " has placed a city on a shared vertex at " << places[0] << " with number " << placesNum[0] << " and " << places[1] << " with number " << placesNum[1] << endl;
 }
 
