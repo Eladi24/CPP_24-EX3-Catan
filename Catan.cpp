@@ -315,13 +315,5 @@ void Catan::analyzeDiceRoll(int roll_sum, Player*& currentPlayer)
             }
         }
     }
-    // Check if a player has won the game
-    try
-    {
-        checkWinner();
-    }
-    catch (const invalid_argument &e)
-    {
-        cout << e.what() << endl;
-    }
+    
 }

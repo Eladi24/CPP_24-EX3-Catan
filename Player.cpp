@@ -12,7 +12,7 @@ Player::~Player()
     for (auto &[cardType, devCards] : this->_devCards)
     {
         for (auto &card : devCards)
-        {
+        {   cout << "Deleting card" << endl;
             delete card;
         }
     }
@@ -53,7 +53,7 @@ void Player::endTurn()
     cout << "Player " << this->_name << " has ended their turn." << endl;
 }
 
-bool Player::trade(Player pToTrade, ResourceType resourceToGive, ResourceType resourceToGet, uint amountToGive, uint amountToGet)
+bool Player::trade(Player& pToTrade, ResourceType resourceToGive, ResourceType resourceToGet, uint amountToGive, uint amountToGet)
 {
     TradeRequest request = {resourceToGive, resourceToGet, amountToGive, amountToGet};
 

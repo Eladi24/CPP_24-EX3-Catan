@@ -72,7 +72,7 @@ namespace ariel
 
         void endTurn();
 
-        bool trade(Player pToTrade, ResourceType resourceToGive, ResourceType resourceToGet, uint amountToGive, uint amountToGet);
+        bool trade(Player& pToTrade, ResourceType resourceToGive, ResourceType resourceToGet, uint amountToGive, uint amountToGet);
 
         bool reviewTradeRequest(TradeRequest tradeRequest);
 

@@ -27,10 +27,8 @@ DOCTEST_FLAGS = -std=c++11 -I doctest
 
 all: Main Demo Test
 
-run: Demo Main Test
-	./Demo
+catan: Main
 	./Main
-	./Test
 
 Main: Main.o $(LIB)
 	$(CXX) $(CXXFLAGS) -o Main Main.o $(LIB) $(LDFLAGS)

@@ -158,14 +158,24 @@ TEST_CASE("Building a road without a settlement")
     CHECK_NOTHROW(p1.placeRoad({LandType::Pasture, LandType::Forest}, {2, 9}, b, c));
 }
 
-TEST_CASE("Trying to cause memory leak")
+TEST_CASE("Stealing invalid resources")
 {
     Player p1 = Player("p1", sf::Color::Red);
-    Board b = Board();
+    Player p2 = Player("p2", sf::Color::Blue);
+    
     Cashbox c = Cashbox();
     p1.setTurn(true);
-    
+    CHECK_THROWS(p1.stealResource(&p2, ResourceType::Wood));
+    CHECK_THROWS(p1.stealResource(&p2, ResourceType::Brick));
+    // Adding resources to the player
+    p1.addResource(ResourceType::Wood, c, 3);
+    p1.addResource(ResourceType::Brick, c, 3);
+    CHECK_NOTHROW(p1.stealResource(&p2, ResourceType::Wood));
+    CHECK_NOTHROW(p1.stealResource(&p2, ResourceType::Brick));
 }
+
+
+
 
 
 
