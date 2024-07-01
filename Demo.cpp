@@ -27,12 +27,10 @@ int main()
     catan.ChooseStartingPlayer();   // should print the name of the starting player, assume it is Amit.
     Board& board = catan.getBoard(); // get the board of the game.
     Cashbox& cashbox = catan.getCashbox(); // get the cashbox of the game.
-    cashbox.printDeck(); // print the deck of the cashbox.
     vector<LandType> places = {LandType::Forest, LandType::Hills};
     vector<int> placesNum = {11, 6};
     p1->placeSettelemnt(places, placesNum, board, cashbox);
     p1->placeRoad(places, placesNum, board, cashbox); // p1 chooses Forest, hills with numbers 11, 6.
-    board.printBoard(); // print the board of the game.
     
     places = {LandType::Field, LandType::Desert};
     placesNum = {4, 0};

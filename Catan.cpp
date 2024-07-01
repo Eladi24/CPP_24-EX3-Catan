@@ -249,7 +249,63 @@ void Catan::analyzeDiceRoll(int roll_sum, Player*& currentPlayer)
     }
     else
     {
-        
+        // Yield resources to the players based on the dice roll
         this->yieldResources(roll_sum);
+
+        // Check if a one of the players has the longest road or largest army
+        vector<Player*> players = {_p1, _p2, _p3};
+        if(!_cashbox.getLongestRoadHolder())
+        {
+            
+            for (auto &player : players)
+            {
+                if (player->countSequenceRoads() >= 5)
+                {
+                    player->setLongestRoadHolder();
+                    _cashbox.setLongestRoadHolder(player);
+                    cout << "Player: " << player->getName() << " has the longest road" << endl;
+                    break;
+                }
+            }
+        } else {
+            
+            for (auto &player : players)
+            {
+                if (player->countSequenceRoads() > _cashbox.getLongestRoadHolder()->countSequenceRoads())
+                {   
+                    cout << "Player: " << _cashbox.getLongestRoadHolder()->getName() << " no longer has the longest road" << endl;
+                    _cashbox.getLongestRoadHolder()->takeLongestRoadCard();
+                    _cashbox.setLongestRoadHolder(nullptr);
+                    _cashbox.setLongestRoadHolder(player);
+                    cout << "Player: " << player->getName() << " has the longest road" << endl;
+                }
+            }
+        }
+
+        if(!_cashbox.getLargestArmyHolder())
+        {
+            for (auto &player : players)
+            {
+                if (player->countKnightCards() >= 3)
+                {
+                    player->setLargestArmyHolder();
+                    _cashbox.setLargestArmyHolder(player);
+                    cout << "Player: " << player->getName() << " has the largest army" << endl;
+                    break;
+                }
+            }
+        } else {
+            for (auto &player : players)
+            {
+                if (player->countKnightCards() > _cashbox.getLargestArmyHolder()->countKnightCards())
+                {
+                    cout << "Player: " << _cashbox.getLargestArmyHolder()->getName() << " no longer has the largest army" << endl;
+                    _cashbox.getLargestArmyHolder()->takeLargestArmyCard();
+                    _cashbox.setLargestArmyHolder(nullptr);
+                    _cashbox.setLargestArmyHolder(player);
+                    cout << "Player: " << player->getName() << " has the largest army" << endl;
+                }
+            }
+        }
     }
 }

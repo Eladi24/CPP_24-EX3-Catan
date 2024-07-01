@@ -37,8 +37,9 @@ int Player::rollDice()
 {
     // Player can only roll the dice if it is their turn or the starting phase
     if (this->_isTurn || this->_isStatringPhase)
-    {
-        return this->_die1.roll() + this->_die2.roll();
+    {   int roll = this->_die1.roll() + this->_die2.roll();
+        cout << "Player " << this->_name << " has rolled a " << roll << endl;
+        return roll;
     }
 
     else
@@ -367,7 +368,7 @@ bool Player::canPlaceRoad(shared_ptr<Vertex> v1, shared_ptr<Vertex> v2)
             return false;
         }
     }
-    
+
     if (!v1 || !v2)
     {
         return false;
@@ -729,4 +730,68 @@ void Player::takeLongestRoadCard()
     this->removeVictoryPoints(2);
 
     cout << "Player " << this->_name << " has lost the longest road." << endl;
+}
+
+map<shared_ptr<Vertex>, vector<shared_ptr<Vertex>>> Player::getRoadNetwork() const
+{
+    map<shared_ptr<Vertex>, vector<shared_ptr<Vertex>>> roadNetwork;
+
+    for (const auto &roadPair : _roads)
+    {
+        auto trail = roadPair.first;
+        auto start = trail->getStart().lock();
+        auto end = trail->getEnd().lock();
+
+        if (start && end)
+        {
+            roadNetwork[start].push_back(end);
+            roadNetwork[end].push_back(start);
+        }
+    }
+
+    return roadNetwork;
+}
+
+size_t Player::dfs(shared_ptr<Vertex> vertex, shared_ptr<Vertex> parent, map<shared_ptr<Vertex>, vector<shared_ptr<Vertex>>> &roadNetwork, map<shared_ptr<Vertex>, bool> &visited)
+{
+    visited[vertex] = true;
+    size_t maxLength = 0;
+
+    for (const auto &neighbor : roadNetwork[vertex])
+    {
+        if (neighbor != parent && !visited[neighbor])
+        {
+            maxLength = max(maxLength, dfs(neighbor, vertex, roadNetwork, visited) + 1);
+        }
+    }
+
+    visited[vertex] = false;
+    return maxLength;
+}
+
+
+size_t Player::countSequenceRoads()
+{
+    auto roadNetwork = getRoadNetwork();
+    map<shared_ptr<Vertex>, bool> visited;
+    size_t longestRoad = 0;
+
+    for (const auto &roadPair : roadNetwork)
+    {
+        auto vertex = roadPair.first;
+        longestRoad = max(longestRoad, dfs(vertex, nullptr, roadNetwork, visited));
+    }
+
+    return longestRoad;
+}
+
+size_t Player::countKnightCards()
+{
+    if (this->_devCards.find(CardType::KNIGHT) == this->_devCards.end())
+    {
+        return 0;
+    }
+    else {
+        return this->_devCards[CardType::KNIGHT].size();
+    }
 }

@@ -233,15 +233,7 @@ int Cashbox::getNumResourceCards(ResourceType type)
     }
 }
 
-bool Cashbox::canAffordDevCard(Player& p)
-{
-    if (p.getResourceAmount(ResourceType::Wool) >= 1 && p.getResourceAmount(ResourceType::Ore) >= 1 
-    && p.getResourceAmount(ResourceType::Grain) >= 1)
-    {
-        return true;
-    }
-    return false;
-}
+
 
 
 CardType Cashbox::peekDeck()

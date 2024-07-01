@@ -36,8 +36,8 @@ namespace ariel
         bool _isLongestRoadHolder;
         void initPlayer();
         bool canTrade(TradeRequest tradeRequest);
-        
-        
+        map<shared_ptr<Vertex>, vector<shared_ptr<Vertex>>> getRoadNetwork() const;
+        size_t dfs(shared_ptr<Vertex> vertex, shared_ptr<Vertex> parent, map<shared_ptr<Vertex>, vector<shared_ptr<Vertex>>> &roadNetwork, map<shared_ptr<Vertex>, bool> &visited);
         
         
         
@@ -131,6 +131,10 @@ namespace ariel
         void takeLongestRoadCard(); 
 
         sf::Color getColor() const { return this->_color; }
+
+        size_t countSequenceRoads();
+
+        size_t countKnightCards();
 
     };
 } // namespace ariel

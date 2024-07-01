@@ -61,13 +61,15 @@ namespace ariel
             // Shuffle the resource cardss
             void shuffleResourceCards();
 
-            bool canAffordDevCard(Player& p);
-
             CardType peekDeck();
             void printDeck();
 
             void setLargestArmyHolder(Player* p);
+
             void setLongestRoadHolder(Player* p);
+
+            Player* getLargestArmyHolder() const { return _largestArmyHolder; }
+            Player* getLongestRoadHolder() const { return _longestRoadHolder; }
              
         
             
