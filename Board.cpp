@@ -280,7 +280,7 @@ void Board::printBoard(sf::RenderWindow &window)
                     hexagon.setFillColor(sf::Color(128, 128, 128)); // Gray
                     break;
                 case LandType::Pasture:
-                    hexagon.setFillColor(sf::Color::White);
+                    hexagon.setFillColor(sf::Color(152, 251, 152)); // Light Green
                     break;
                 default:
                     hexagon.setFillColor(sf::Color::Transparent);
@@ -290,14 +290,13 @@ void Board::printBoard(sf::RenderWindow &window)
                 // Set color for the robber
                 if (this->_hexagonGrid[i][j]->hasRobber())
                 {
-                    cout << "Robber found at: " << i << ", " << j << endl;
+
                     // Add the robber as a fill on the center of the hexagon
                     robber = sf::CircleShape(20, 3);
                     robber.setOrigin(20, 20);
                     robber.setPosition(x, y);
                     robber.setFillColor(sf::Color::Black);
                 }
-                
 
                 // Create the text
                 sf::Text text;
@@ -316,6 +315,103 @@ void Board::printBoard(sf::RenderWindow &window)
                 if (this->_hexagonGrid[i][j]->hasRobber())
                 {
                     window.draw(robber);
+                }
+
+                // Draw the vertices
+                for (const auto &[location, vertex] : this->_hexagonGrid[i][j]->getVerticesMap())
+                {
+                    auto vertexPtr = vertex.lock();
+                    
+                    // Calculate the vertex's  with a switch case
+                    double vertexX = x;
+                    double vertexY = y;
+                    switch (location)
+                    {
+                    case VertexLocation::TOP:
+                        vertexY -= radius;
+                        break;
+                    case VertexLocation::TOP_RIGHT:
+                        vertexX += radius * sqrt(3) / 2;
+                        vertexY -= radius / 2;
+                        break;
+                    case VertexLocation::BOTTOM_RIGHT:
+                        vertexX += radius * sqrt(3) / 2;
+                        vertexY += radius / 2;
+                        break;
+                    case VertexLocation::BOTTOM:
+                        vertexY += radius;
+                        break;
+                    case VertexLocation::BOTTOM_LEFT:
+                        vertexX -= radius * sqrt(3) / 2;
+                        vertexY += radius / 2;
+                        break;
+
+                    case VertexLocation::TOP_LEFT:
+                        vertexX -= radius * sqrt(3) / 2;
+                        vertexY -= radius / 2;
+                        break;
+
+                    }
+                    vertexPtr->draw(window, vertexX, vertexY);
+                }
+
+                // Draw the trails
+                for (const auto &[location, trail] : this->_hexagonGrid[i][j]->getEdgesMap())
+                {
+                    auto trailPtr = trail.lock();
+                    double startX = x;
+                    double startY = y;
+                    double endX = x;
+                    double endY = y;
+                    switch (location)
+                    {
+                        case TrailLocation::TOP_RIGHT_EDGE:
+                            // Calculate the top (start) and top right (end) vertices
+                            startY -= radius;
+                            endX += radius * sqrt(3) / 2;
+                            endY -= radius / 2;
+                            break;
+                        
+                        case TrailLocation::RIGHT_EDGE:
+                            // Calculate the top right (start) and bottom right (end) vertices
+                            startX += radius * sqrt(3) / 2;
+                            startY -= radius / 2;
+                            endX += radius * sqrt(3) / 2;
+                            endY += radius / 2;
+                            break;
+                        
+                        case TrailLocation::BOTTOM_RIGHT_EDGE:
+                            // Calculate the bottom right (start) and bottom (end) vertices
+                            startX += radius * sqrt(3) / 2;
+                            startY += radius / 2;
+                            endY += radius;
+                            break;
+
+                        case TrailLocation::BOTTOM_LEFT_EDGE:
+                            // Calculate the bottom (start) and bottom left (end) vertices
+                            startY += radius;
+                            endX -= radius * sqrt(3) / 2;
+                            endY += radius / 2;
+                            break;
+
+                        case TrailLocation::LEFT_EDGE:
+                            // Calculate the bottom left (start) and top left (end) vertices
+                            startX -= radius * sqrt(3) / 2;
+                            startY += radius / 2;
+                            endX -= radius * sqrt(3) / 2;
+                            endY -= radius / 2;
+                            break;
+                        
+                        case TrailLocation::TOP_LEFT_EDGE:
+                            // Calculate the top left (start) and top (end) vertices
+                            startX -= radius * sqrt(3) / 2;
+                            startY -= radius / 2;
+                            endY -= radius;
+                            break;
+                        
+                    }
+                    
+                    trailPtr->draw(window, startX, startY, endX, endY);
                 }
             }
         }
@@ -337,8 +433,6 @@ void Board::printBoard()
         window.clear();
         printBoard(window);
         window.display();
-        sf::sleep(sf::seconds(5));
-        window.close();
     }
 }
 
@@ -405,19 +499,6 @@ bool Board::hasRoad(shared_ptr<Vertex> v1, shared_ptr<Vertex> v2) const
     return false;
 }
 
-void Board::placeRoad(shared_ptr<Vertex> v1, shared_ptr<Vertex> v2, const Player *owner)
-{
-    auto trail = v1->getTrail(v2);
-    if (trail)
-    {
-        trail->setRoad(owner);
-    }
-    else
-    {
-        cout << "Trail not found." << endl;
-    }
-}
-
 bool Board::vertexMatches(shared_ptr<Vertex> v, vector<LandType> &places, vector<int> &placesNum) const
 {
     if (places.size() != placesNum.size() || places.size() != 2)
@@ -466,17 +547,17 @@ vector<shared_ptr<Vertex>> Board::getNeighborVertices(shared_ptr<Vertex> v) cons
             const auto &end = tPtr->getEnd().lock();
 
             // Add the vertex that is not the input vertex
-            if (start != v)
+            if (start != v && find(neighbors.begin(), neighbors.end(), start) == neighbors.end())
+
             {
                 neighbors.push_back(start);
             }
-            if (end != v)
+            if (end != v && find(neighbors.begin(), neighbors.end(), end) == neighbors.end())
             {
                 neighbors.push_back(end);
             }
         }
     }
-
     return neighbors;
 }
 
@@ -495,4 +576,19 @@ shared_ptr<Hexagon> Board::getRobberHexagon() const
         }
     }
     return nullptr;
+}
+
+bool Board::distanceRule(shared_ptr<Vertex> v)
+{
+    auto neighbors = getNeighborVertices(v);
+
+    for (auto &n : neighbors)
+    {
+        if (n->isOccupied())
+        {
+            return false;
+        }
+    }
+
+    return true;
 }

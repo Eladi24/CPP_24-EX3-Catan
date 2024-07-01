@@ -29,56 +29,108 @@ namespace ariel
         map<CardType, vector<DevCard*>> _devCards;
         Die _die1;
         Die _die2;
+        sf::Color _color;
         bool _isTurn;
         bool _isStatringPhase;
+        bool _isLargestArmyHolder;
+        bool _isLongestRoadHolder;
         void initPlayer();
         bool canTrade(TradeRequest tradeRequest);
         
         
         
         
+        
     public:
-        Player(const string name): _name(name), _victoryPoints(0), _isTurn(false), _isStatringPhase(true) {
+        Player(const string name, sf::Color color): _name(name), _victoryPoints(0), _color(color), _isTurn(false), _isStatringPhase(true), _isLargestArmyHolder(false), _isLongestRoadHolder(false) {
             initPlayer();
         }
         
         ~Player();
+
         void placeSettelemnt(vector<LandType> places, vector<int> placesNum, Board& board, Cashbox& cashbox);
+
         void placeRoad(vector<LandType> places, vector<int> placesNum, Board& board, Cashbox& cashbox);
+
         void placeCity(vector<LandType> places, vector<int> placesNum, Board& board, Cashbox& cashbox);
+
         int rollDice();
+
         void endTurn();
+
         bool trade(Player pToTrade, ResourceType resourceToGive, ResourceType resourceToGet, uint amountToGive, uint amountToGet);
+
         bool reviewTradeRequest(TradeRequest tradeRequest);
+
         void buyDevelopmentCard(Cashbox& cashbox);
+
         void printPoints();
+
         string getName() const { return this->_name; }
+
         int getVictoryPoints() const { return this->_victoryPoints; }
+
         void addVictoryPoints(int points);
+
         void removeVictoryPoints(int points);
+
         void addResource(ResourceType resource, Cashbox& cashbox, size_t amount);
+
         void removeResource(ResourceType resource, Cashbox& cashbox, size_t amount);
+
         size_t getResourceAmount(ResourceType resource) const;
-        void setTurn(bool isTurn) { this->_isTurn = isTurn; }
-        bool canPlaceSettlement(shared_ptr<Vertex> v);
+
+        void setTurn(bool isTurn);
+
+        bool canPlaceSettlement(shared_ptr<Vertex> v, Board& board);
+        
         bool canPlaceRoad(shared_ptr<Vertex> v1 , shared_ptr<Vertex> v2);
+
         bool canPlaceCity(shared_ptr<Vertex> v);
+
         bool canAffordSettlement();
+
         bool canAffordRoad();
+
         bool canAffordCity();
+        
+        bool canAffordDevCard();
+
         void deductResourcesForSettlement(Cashbox& cashbox);
+
         void deductResourcesForRoad(Cashbox& cashbox);
+
         void setStartingPhase(bool isStartingPhase) { this->_isStatringPhase = isStartingPhase; }
+
         void addStructure(Structure* structure, shared_ptr<Vertex> v) { this->_structures[v] = structure; }
+
         void addRoad(Road* road, shared_ptr<Trail> t) { this->_roads[t] = road; }
+
         int getTotalResources();
+
         bool getIsTurn() const { return this->_isTurn; }
+
 
         // Methods for moving the robber
         void moveRobber(Board& board);
+
         void stealResource(Player* p, ResourceType type);
+
         void activateDevCard(Board& board, Cashbox& cashbox, vector<Player*> players);
-        
+
+        void setLargestArmyHolder();
+
+        void setLongestRoadHolder();
+
+        bool getIsLargestArmyHolder() const { return this->_isLargestArmyHolder; }
+
+        bool getIsLongestRoadHolder() const { return this->_isLongestRoadHolder; }
+
+        void takeLargestArmyCard();
+
+        void takeLongestRoadCard(); 
+
+        sf::Color getColor() const { return this->_color; }
 
     };
 } // namespace ariel

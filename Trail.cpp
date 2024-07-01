@@ -45,4 +45,35 @@ double Trail::getLength() const
    }
 }
 
+#include <SFML/Graphics.hpp>
+#include <cmath> // For atan2 and hypot
+
+void Trail::draw(sf::RenderWindow& window, double startX, double startY, double endX, double endY)
+{
+    if (this->_hasRoad)
+    {
+        sf::Color color = this->_road->getOwner()->getColor();
+
+        // Calculate the length of the line
+        double length = std::hypot(endX - startX, endY - startY);
+
+        // Create a rectangle to represent the line
+        sf::RectangleShape line(sf::Vector2f(length, 5.0f)); // 5.0f is the thickness of the line
+        line.setFillColor(color);
+
+        // Calculate the angle (in degrees) to rotate the line
+        double angle = std::atan2(endY - startY, endX - startX) * 180 / M_PI;
+
+        // Set the origin to the center of the rectangle for proper rotation
+        line.setOrigin(0, 2.5f); // Half of the thickness as the origin
+
+        // Rotate and position the line
+        line.setRotation(angle);
+        line.setPosition(sf::Vector2f(startX, startY));
+
+        // Draw the line
+        window.draw(line);
+    }
+}
+
 

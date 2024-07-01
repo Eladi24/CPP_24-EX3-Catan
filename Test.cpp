@@ -9,9 +9,9 @@ using namespace ariel;
 
 TEST_CASE("Playing not in turn")
 {
-    Player p1 = Player("p1");
-    Player p2 = Player("p2");
-    Player p3 = Player("p3");
+    Player p1 = Player("p1", sf::Color::Red);
+    Player p2 = Player("p2", sf::Color::Blue);
+    Player p3 = Player("p3", sf::Color::Magenta);
     p1.setStartingPhase(false);
     p2.setStartingPhase(false);
     p3.setStartingPhase(false);
@@ -36,7 +36,7 @@ TEST_CASE("Playing not in turn")
 
 TEST_CASE("Removing too many resources")
 {
-    Player p1 = Player("p1");
+    Player p1 = Player("p1", sf::Color::Red);
     Cashbox c = Cashbox();
     p1.setStartingPhase(false);
     p1.setTurn(true);
@@ -52,7 +52,7 @@ TEST_CASE("Removing too many resources")
 
 TEST_CASE("Adding too many points")
 {
-    Player p1 = Player("p1");
+    Player p1 = Player("p1", sf::Color::Red);
     p1.setTurn(true);
     CHECK_THROWS(p1.addVictoryPoints(100));
     CHECK_THROWS(p1.addVictoryPoints(1000));
@@ -62,7 +62,7 @@ TEST_CASE("Adding too many points")
 
 TEST_CASE("Removing too many points")
 {
-    Player p1 = Player("p1");
+    Player p1 = Player("p1", sf::Color::Red);
     p1.setTurn(true);
     CHECK_THROWS(p1.removeVictoryPoints(100));
     CHECK_THROWS(p1.removeVictoryPoints(1000));
@@ -73,7 +73,7 @@ TEST_CASE("Removing too many points")
 
 TEST_CASE("Setteling on invalid vertex")
 {
-    Player p1 = Player("p1");
+    Player p1 = Player("p1", sf::Color::Red);
     Board b = Board();
     Cashbox c = Cashbox();
     p1.setTurn(true);
@@ -86,7 +86,7 @@ TEST_CASE("Setteling on invalid vertex")
 
 TEST_CASE("Placing road on invalid trail")
 {
-    Player p1 = Player("p1");
+    Player p1 = Player("p1", sf::Color::Red);
     Board b = Board();
     Cashbox c = Cashbox();
     p1.setTurn(true);
@@ -99,7 +99,7 @@ TEST_CASE("Placing road on invalid trail")
 
 TEST_CASE("Placing city on invalid vertex")
 {
-    Player p1 = Player("p1");
+    Player p1 = Player("p1", sf::Color::Red);
     Board b = Board();
     Cashbox c = Cashbox();
     p1.setTurn(true);
@@ -147,7 +147,7 @@ TEST_CASE("Drawing from an empty deck")
 
 TEST_CASE("Building a road without a settlement")
 {
-    Player p1 = Player("p1");
+    Player p1 = Player("p1", sf::Color::Red);
     Board b = Board();
     Cashbox c = Cashbox();
     p1.setTurn(true);
@@ -160,7 +160,7 @@ TEST_CASE("Building a road without a settlement")
 
 TEST_CASE("Trying to cause memory leak")
 {
-    Player p1 = Player("p1");
+    Player p1 = Player("p1", sf::Color::Red);
     Board b = Board();
     Cashbox c = Cashbox();
     p1.setTurn(true);

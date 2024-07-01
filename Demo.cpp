@@ -17,9 +17,9 @@ using namespace ariel;
 int main()
 {
     int roll_sum;
-    Player* p1 = new Player("Amit");
-    Player* p2 = new Player("Yossi");
-    Player* p3 = new Player("Dana");
+    Player* p1 = new Player("Amit", sf::Color::Red);
+    Player* p2 = new Player("Yossi", sf::Color::Blue);
+    Player* p3 = new Player("Dana", sf::Color::Magenta);
 
     Catan catan(p1, p2, p3);
     // Starting of the game. Every player places two settlements and two roads.
@@ -32,6 +32,7 @@ int main()
     vector<int> placesNum = {11, 6};
     p1->placeSettelemnt(places, placesNum, board, cashbox);
     p1->placeRoad(places, placesNum, board, cashbox); // p1 chooses Forest, hills with numbers 11, 6.
+    board.printBoard(); // print the board of the game.
     
     places = {LandType::Field, LandType::Desert};
     placesNum = {4, 0};
@@ -97,6 +98,7 @@ int main()
 
     roll_sum = p1->rollDice(); // Lets say it's print 6. Then, p1 gets bricks from the hills.
     catan.analyzeDiceRoll(roll_sum, p1);
+    board.printBoard(); // print the board of the game.
 
     try {
             p1->trade(*p2, ResourceType::Wood, ResourceType::Brick, 1, 1); // p1 trades 1 wood for 1 brick with p2.

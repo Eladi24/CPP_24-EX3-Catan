@@ -1,5 +1,7 @@
 #ifndef _VERTEX_HPP_
 #define _VERTEX_HPP_
+
+#include <SFML/Graphics.hpp>
 #include "Point.hpp"
 #include "Types.hpp"
 #include "Hexagon.hpp"
@@ -44,6 +46,8 @@ namespace ariel
             void addTrail(shared_ptr<Trail> trail) { this->_trails.push_back(trail); }
             bool operator==(const Point& p) const;
             shared_ptr<Trail> getTrail(shared_ptr<Vertex> v) const;
+
+            void draw(sf::RenderWindow& window, double x, double y);
             
             
     };

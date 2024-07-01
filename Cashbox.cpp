@@ -9,7 +9,7 @@ using namespace std;
 using namespace ariel;
 
 // Constructor
-Cashbox::Cashbox()
+Cashbox::Cashbox(): _largestArmyHolder(nullptr), _longestRoadHolder(nullptr)
 {
     this->init();
 }
@@ -235,7 +235,8 @@ int Cashbox::getNumResourceCards(ResourceType type)
 
 bool Cashbox::canAffordDevCard(Player& p)
 {
-    if (p.getResourceAmount(ResourceType::Wool) >= 1 && p.getResourceAmount(ResourceType::Ore) >= 1 && p.getResourceAmount(ResourceType::Grain) >= 1)
+    if (p.getResourceAmount(ResourceType::Wool) >= 1 && p.getResourceAmount(ResourceType::Ore) >= 1 
+    && p.getResourceAmount(ResourceType::Grain) >= 1)
     {
         return true;
     }
@@ -259,6 +260,34 @@ void Cashbox::printDeck()
         cout << card->getCardType() << endl;
     }
 }
+
+void Cashbox::setLargestArmyHolder(Player* p)
+{
+    if (_largestArmyHolder != nullptr)
+    {
+        _largestArmyHolder->takeLargestArmyCard();
+        p->setLargestArmyHolder();
+    }
+    else
+    {
+        p->setLargestArmyHolder();
+    }
+}
+
+void Cashbox::setLongestRoadHolder(Player* p)
+{
+    if (_longestRoadHolder != nullptr)
+    {
+        _longestRoadHolder->takeLongestRoadCard();
+        p->setLongestRoadHolder();
+    }
+    else
+    {
+        p->setLongestRoadHolder();
+    }
+}
+
+
 
 
 

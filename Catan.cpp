@@ -130,7 +130,7 @@ void Catan::yieldResources(int diceRoll)
         {
             for (const auto &[vertexKey, vertex] : hex->getVerticesMap())
             {
-                if ((vertex.lock())->getStructure() != nullptr)
+                if ((vertex.lock())->getStructure() != nullptr && hex->getResourceType() != ResourceType::None)
                 {
                     (vertex.lock())->yieldResources(hex->getResourceType(), _cashbox);
                 }
@@ -145,7 +145,7 @@ void Catan::yieldResources(int diceRoll)
         {
             for (const auto &[vertexKey, vertex] : hex->getVerticesMap())
             {
-                if ((vertex.lock())->getStructure() != nullptr)
+                if ((vertex.lock())->getStructure() != nullptr && hex->getResourceType() != ResourceType::None)
                 {
                     (vertex.lock())->yieldResources(hex->getResourceType(), _cashbox);
                 }
@@ -220,6 +220,7 @@ void Catan::analyzeDiceRoll(int roll_sum, Player*& currentPlayer)
     // If the dice roll is 7, the robber is activated and the player should move the robber to a new hexagon
     if (roll_sum == 7)
     {
+        cout << "Player: " << currentPlayer->getName() << " rolled a 7" << endl;
         currentPlayer->moveRobber(_board);
         shared_ptr<Hexagon> robberHex = _board.getRobberHexagon();
         vector<Player*> otherPlayers;

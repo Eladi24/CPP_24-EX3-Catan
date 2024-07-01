@@ -1,6 +1,7 @@
 #ifndef _TRAIL_HPP_
 #define _TRAIL_HPP_
 #include <memory>
+#include <SFML/Graphics.hpp>
 #include "Vertex.hpp"
 #include "Road.hpp"
 
@@ -40,6 +41,8 @@ namespace ariel
             void setRoad(const Player* owner);
             
             Road* getRoad() const { return this->_road; }
+
+            void draw(sf::RenderWindow& window, double startX, double startY, double endX, double endY);
            
     };
 }

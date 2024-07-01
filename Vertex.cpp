@@ -1,6 +1,5 @@
 #include <iostream>
 #include <vector>
-
 #include "Vertex.hpp"
 #include "Settlement.hpp"
 #include "City.hpp"
@@ -86,6 +85,28 @@ shared_ptr<Trail> Vertex::getTrail(shared_ptr<Vertex> v) const
     }
     cout << "No trail found between the vertices" << endl;
     return nullptr;
+}
+
+void Vertex::draw(sf::RenderWindow& window, double x, double y)
+{
+    if (this->_isOccupied)
+    {
+        // Define the size of the point. Adjust the radius as needed.
+        float radius = 7.0f; // Example size that is neither too small nor too large
+
+        // Create a circle shape to represent the point
+        sf::CircleShape point(radius);
+
+        // Set the fill color to the owner's color
+        point.setFillColor(this->_structure->getOwner()->getColor());
+
+        // Set the position of the point. Assuming you have a way to get the vertex's position.
+        // For example, if each structure knows its vertex position:
+        point.setPosition(x - radius, y - radius);
+
+        // Draw the point on the window
+        window.draw(point);
+    }
 }
 
 

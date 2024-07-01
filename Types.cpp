@@ -73,6 +73,23 @@ namespace ariel
         case CardType::PROGRESS:
             os << "Progress";
             break;
+
+        case CardType::ROAD_BUILDING:
+            os << "RoadBuilding";
+            break;
+        case CardType::MONOPOLY:
+            os << "Monopoly";
+            break;
+        case CardType::YEAR_OF_PLENTY:
+            os << "YearOfPlenty";
+            break;
+        case CardType::LARGEST_ARMY:
+            os << "LargestArmy";
+            break;
+        case CardType::LONGEST_ROAD:
+            os << "LongestRoad";
+            break;
+        
         }
         return os;
     }

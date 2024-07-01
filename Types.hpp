@@ -49,9 +49,7 @@ namespace ariel
     {
         ROAD_BUILDING,
         YEAR_OF_PLENTY,
-        MONOPOLY,
-        LARGEST_ARMY,
-        LONGEST_ROAD
+        MONOPOLY
     };
 
     enum class devCardAction

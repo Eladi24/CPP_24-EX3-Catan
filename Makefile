@@ -27,6 +27,11 @@ DOCTEST_FLAGS = -std=c++11 -I doctest
 
 all: Main Demo Test
 
+run: Demo Main Test
+	./Demo
+	./Main
+	./Test
+
 Main: Main.o $(LIB)
 	$(CXX) $(CXXFLAGS) -o Main Main.o $(LIB) $(LDFLAGS)
 
@@ -50,6 +55,8 @@ Valgrind_main: Main
 
 Valgrind_test: Test
 	valgrind $(VALGRIND_FLAGS) ./Test
+
+rebuild: clean all
 
 .PHONY: clean all
 

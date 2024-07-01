@@ -28,6 +28,9 @@ namespace ariel
             vector<ResourceCard> oreCards;
             vector<ResourceCard> woolCards;
             vector<ResourceCard> grainCards;
+
+            Player* _largestArmyHolder;
+            Player* _longestRoadHolder;
             
         
         public:
@@ -62,6 +65,10 @@ namespace ariel
 
             CardType peekDeck();
             void printDeck();
+
+            void setLargestArmyHolder(Player* p);
+            void setLongestRoadHolder(Player* p);
+             
         
             
     };
