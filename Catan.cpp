@@ -221,7 +221,14 @@ void Catan::analyzeDiceRoll(int roll_sum, Player*& currentPlayer)
     if (roll_sum == 7)
     {
         cout << "Player: " << currentPlayer->getName() << " rolled a 7" << endl;
-        currentPlayer->moveRobber(_board);
+        try {
+            currentPlayer->moveRobber(_board);
+        }
+        catch (const invalid_argument &e)
+        {
+            cout << e.what() << endl;
+        }
+        
         shared_ptr<Hexagon> robberHex = _board.getRobberHexagon();
         vector<Player*> otherPlayers;
         if(currentPlayer != _p1) otherPlayers.push_back(_p1);
@@ -307,5 +314,14 @@ void Catan::analyzeDiceRoll(int roll_sum, Player*& currentPlayer)
                 }
             }
         }
+    }
+    // Check if a player has won the game
+    try
+    {
+        checkWinner();
+    }
+    catch (const invalid_argument &e)
+    {
+        cout << e.what() << endl;
     }
 }

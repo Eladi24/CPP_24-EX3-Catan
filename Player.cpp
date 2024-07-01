@@ -364,7 +364,7 @@ bool Player::canPlaceRoad(shared_ptr<Vertex> v1, shared_ptr<Vertex> v2)
     if (!_isStatringPhase)
     {
         if (!this->canAffordRoad())
-        {
+        {   cout << "Player " << this->_name << " cannot afford a road." << endl;
             return false;
         }
     }
@@ -424,12 +424,13 @@ bool Player::canPlaceSettlement(shared_ptr<Vertex> v, Board &board)
 
 bool Player::canPlaceCity(shared_ptr<Vertex> v)
 {
-    // Check if the player has a settlement on this vertex
-    if (this->_structures.find(v) != this->_structures.end())
+    if (this->canAffordCity())
     {
-        return true;
+        if (this->_structures.find(v) != this->_structures.end())
+        {
+            return true;
+        }
     }
-
     return false;
 }
 
@@ -493,7 +494,8 @@ bool Player::canAffordCity()
 
 bool Player::canAffordDevCard()
 {
-    return this->_resourceCards[ResourceType::Wool].size() >= 1 && this->_resourceCards[ResourceType::Ore].size() >= 1 && this->_resourceCards[ResourceType::Grain].size() >= 1;
+    return this->_resourceCards[ResourceType::Wool].size() >= 1 && this->_resourceCards[ResourceType::Ore].size() >= 1 
+    && this->_resourceCards[ResourceType::Grain].size() >= 1;
 }
 
 void Player::moveRobber(Board &board)
@@ -665,11 +667,6 @@ void Player::activateDevCard(Board &board, Cashbox &cashbox, vector<Player *> pl
 void Player::placeCity(vector<LandType> places, vector<int> placesNum, Board &board, Cashbox &cashbox)
 {
 
-    if (!this->canAffordCity())
-    {
-        throw invalid_argument("Player cannot afford to build a city");
-    }
-
     if (places.size() != 2 || placesNum.size() != 2)
     {
         throw invalid_argument("Invalid number of arguments");
@@ -681,10 +678,11 @@ void Player::placeCity(vector<LandType> places, vector<int> placesNum, Board &bo
         throw invalid_argument("Invalid vertex");
     }
 
-    if (this->_structures.find(vertex) == this->_structures.end())
+    if (!this->canPlaceCity(vertex))
     {
-        throw invalid_argument("Vertex does not have a settlement");
+        throw invalid_argument("Player cannot place a city here");
     }
+
     // Build a city
     vertex->buildCity(this);
     this->_structures[vertex] = vertex->getStructure();

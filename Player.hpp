@@ -47,9 +47,23 @@ namespace ariel
         }
         
         ~Player();
-
+        /*
+        * @brief
+        * This function places a settlement on the board.
+        * @param places A vector of land types to place the settlement on.
+        * @param placesNum A vector of the number of vertices that should be on each land type.
+        * @param board The board of the game.
+        * @param cashbox The cashbox of the game.
+        */
         void placeSettelemnt(vector<LandType> places, vector<int> placesNum, Board& board, Cashbox& cashbox);
-
+        /*
+        * @brief
+        * This function places a road on the board.
+        * @param places A vector of land types to place the road on.
+        * @param placesNum A vector of the number of trails that should be on each land type.
+        * @param board The board of the game.
+        * @param cashbox The cashbox of the game.
+        */
         void placeRoad(vector<LandType> places, vector<int> placesNum, Board& board, Cashbox& cashbox);
 
         void placeCity(vector<LandType> places, vector<int> placesNum, Board& board, Cashbox& cashbox);

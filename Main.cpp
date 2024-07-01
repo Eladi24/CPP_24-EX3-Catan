@@ -107,16 +107,103 @@ int main()
 
     roll_sum = p1->rollDice();
     catan.analyzeDiceRoll(roll_sum, p1);
-    
-    if (p1->canAffordCity())
+
+    try
     {
         p1->placeCity({LandType::Pasture, LandType::Hills}, {2, 6}, board, cashbox);
-
     }
-    else
+    catch (const std::exception &e)
     {
-        cout << "Player " << p1->getName() << " can't afford a city" << endl;
+        cout << e.what() << endl;
     }
+
+    // P1 want to trade with p3
+    p1->trade(*p2, ResourceType::Grain, ResourceType::Wool, 1, 1);
+    p1->buyDevelopmentCard(cashbox);
+    p1->endTurn();
+    catan.turnCycleChange();
+    
+    roll_sum = p2->rollDice();
+    catan.analyzeDiceRoll(roll_sum, p2);
+
+    // P2 want to build another road to connect his settlements
+    places = {LandType::Hills, LandType::Mountains};
+    placesNum = {5, 3};
+    
+    try {
+        p2->placeRoad(places, placesNum, board, cashbox);
+    }
+    catch (const std::exception &e)
+    {
+        cout << e.what() << endl;
+    }
+    
+    p2->endTurn();
+    catan.turnCycleChange();
+
+    roll_sum = p3->rollDice();
+    catan.analyzeDiceRoll(roll_sum, p3);
+    p3->endTurn();
+    catan.turnCycleChange();
+    board.printBoard();
+
+    roll_sum = p1->rollDice();
+    catan.analyzeDiceRoll(roll_sum, p1);
+    p1->buyDevelopmentCard(cashbox);
+    p1->endTurn();
+    catan.turnCycleChange();
+
+    roll_sum = p2->rollDice();
+    catan.analyzeDiceRoll(roll_sum, p2);
+    p2->endTurn();
+    catan.turnCycleChange();
+
+    roll_sum = p3->rollDice();
+    catan.analyzeDiceRoll(roll_sum, p3);
+    p3->endTurn();
+    catan.turnCycleChange();
+    board.printBoard();
+
+    roll_sum = p1->rollDice();
+    catan.analyzeDiceRoll(roll_sum, p1);
+    try{
+        p1->activateDevCard(board, cashbox, {p1, p2, p3});
+    }
+    catch(const std::exception &e)
+    {
+        cout << e.what() << endl;
+    }
+    
+    p1->endTurn();
+    catan.turnCycleChange();
+
+    roll_sum = p2->rollDice();
+    catan.analyzeDiceRoll(roll_sum, p2);
+
+    // Try to built a city on a settlement
+    try
+    {
+        p2->placeCity({LandType::Field, LandType::Pasture}, {4, 5}, board, cashbox);
+    }
+    catch (const std::exception &e)
+    {
+        cout << e.what() << endl;
+    }
+
+    p2->endTurn();
+    catan.turnCycleChange();
+
+    roll_sum = p3->rollDice();
+    catan.analyzeDiceRoll(roll_sum, p3);
+
+    // P3 want to trade with p1
+    p3->trade(*p1, ResourceType::Ore, ResourceType::Wool, 1, 1);
+    p3->endTurn();
+    catan.turnCycleChange();
+    board.printBoard();
+
+    catan.printWinner();
+    
 
     return 0;
 }
