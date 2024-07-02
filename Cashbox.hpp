@@ -1,3 +1,6 @@
+// ID: 205739907
+// Email: eladima66@gmail.com
+
 #ifndef _CASHBOX_HPP_
 #define _CASHBOX_HPP_
 
@@ -58,10 +61,10 @@ namespace ariel
             void loanResourceCard(Player* p, ResourceCard cardToGive, ResourceType cardToGet);
             // Shuffle the development cards
             void shuffleDevCards();
-            // Shuffle the resource cardss
-            void shuffleResourceCards();
+            
 
             CardType peekDeck();
+
             void printDeck();
 
             void setLargestArmyHolder(Player* p);
@@ -69,6 +72,7 @@ namespace ariel
             void setLongestRoadHolder(Player* p);
 
             Player* getLargestArmyHolder() const { return _largestArmyHolder; }
+
             Player* getLongestRoadHolder() const { return _longestRoadHolder; }
              
         

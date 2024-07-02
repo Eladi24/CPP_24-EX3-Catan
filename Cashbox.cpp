@@ -1,5 +1,8 @@
+// ID: 205739907
+// Email: eladima66@gmail.com
+
 #include <iostream>
-#include <algorithm> // Add this line to include the <algorithm> header
+#include <algorithm> 
 
 #include "Cashbox.hpp"
 #include "KnightCard.hpp"
@@ -56,12 +59,6 @@ void Cashbox::init()
     }
     this->shuffleDevCards();
 
-    // DevCard& largestArmy = new ProgressCard(CardType::PROGRESS, 2, SubCardType::LARGEST_ARMY);
-    // devCards.push_back(largestArmy);
-
-    // DevCard& longestRoad = new ProgressCard(CardType::PROGRESS, 2, SubCardType::LONGEST_ROAD); 
-    // devCards.push_back(longestRoad);
-
     // Initialize the resource cards
 
     for (int i = 0; i < 19; i++)
@@ -96,15 +93,6 @@ void Cashbox::shuffleDevCards()
     random_shuffle(devCards.begin(), devCards.end());
 }
 
-void Cashbox::shuffleResourceCards()
-{
-    // Shuffle the resource cards
-    random_shuffle(woodCards.begin(), woodCards.end());
-    random_shuffle(brickCards.begin(), brickCards.end());
-    random_shuffle(oreCards.begin(), oreCards.end());
-    random_shuffle(woolCards.begin(), woolCards.end());
-    random_shuffle(grainCards.begin(), grainCards.end());
-}
 
 DevCard* Cashbox::drawDevCard()
 {

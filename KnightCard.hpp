@@ -1,3 +1,6 @@
+// ID: 205739907
+// Email: eladima66@gmail.com
+
 #ifndef _KNIGHTCARD_HPP_
 #define _KNIGHTCARD_HPP_
 

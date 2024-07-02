@@ -1,3 +1,6 @@
+// ID: 205739907
+// Email: eladima66@gmail.com
+
 #include <SFML/Graphics.hpp>
 #include "Board.hpp"
 
@@ -24,18 +27,6 @@ Board::~Board()
     }
     this->_hexagonGrid.clear();
 
-    // Clean up the vertices
-    // for (auto& pair : _verticesMap) {
-    //         pair.second.reset(); // Explicitly reset each shared_ptr
-    //     }
-    //     _verticesMap.clear();
-
-    // Clean up the edges
-    // for (auto& pair : _edgesMap) {
-    //     pair.second.reset(); // Explicitly reset each shared_ptr
-    // }
-    // _edgesMap.clear();
-
     // Clean up the hexagons
     for (auto &pair : _hexagonsMap)
     {
@@ -46,14 +37,18 @@ Board::~Board()
 
 void Board::initHexagons()
 {
+    // Define the moves for the hexagons
     double rightMove = sqrt(3);
     double downLeftMoveY = 1.5;
     double downRightMoveX = sqrt(3) / 2;
+    // Define the starting coordinates
     double startingX = -2;
     double startingY = 2;
+
     double x = -2;
     double y = 2;
-
+    // Create the hexagons as they appear on the actual board
+    // We start from the top left corner and move to the right and then down
     Point center1(x, y);
     shared_ptr<Hexagon> hex1 = make_shared<Hexagon>(LandType::Mountains, 10, center1, 1);
 
@@ -229,13 +224,15 @@ void Board::printBoard(sf::RenderWindow &window)
     double xOffset = (windowWidth - totalGridWidth) / 2;
     double yOffset = (windowHeight - totalGridHeight) / 1;
 
+    // Load the font from a default location
     sf::Font font;
     if (!font.loadFromFile("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"))
     {
         std::cerr << "Failed to load font." << std::endl;
         return;
     }
-
+    
+    // Loop through the hexagon grid and draw each hexagon
     for (size_t i = 0; i < this->_hexagonGrid.size(); ++i)
     {
         for (size_t j = 0; j < this->_hexagonGrid[i].size(); ++j)
@@ -317,7 +314,7 @@ void Board::printBoard(sf::RenderWindow &window)
                     window.draw(robber);
                 }
 
-                // Draw the vertices
+                // Draw the structure on vertices if they exist
                 for (const auto &[location, vertex] : this->_hexagonGrid[i][j]->getVerticesMap())
                 {
                     auto vertexPtr = vertex.lock();
@@ -325,6 +322,7 @@ void Board::printBoard(sf::RenderWindow &window)
                     // Calculate the vertex's  with a switch case
                     double vertexX = x;
                     double vertexY = y;
+                    // Calculate the vertex's position based on the hexagon's center and radius
                     switch (location)
                     {
                     case VertexLocation::TOP:
@@ -355,7 +353,7 @@ void Board::printBoard(sf::RenderWindow &window)
                     vertexPtr->draw(window, vertexX, vertexY);
                 }
 
-                // Draw the trails
+                // Draw the roads on edges if they exist
                 for (const auto &[location, trail] : this->_hexagonGrid[i][j]->getEdgesMap())
                 {
                     auto trailPtr = trail.lock();
@@ -363,6 +361,7 @@ void Board::printBoard(sf::RenderWindow &window)
                     double startY = y;
                     double endX = x;
                     double endY = y;
+                    // Calculate the trail's start and end points based on the hexagon's center and radius
                     switch (location)
                     {
                         case TrailLocation::TOP_RIGHT_EDGE:
@@ -419,7 +418,8 @@ void Board::printBoard(sf::RenderWindow &window)
 }
 
 void Board::printBoard()
-{
+{   
+    // Create the sfml window
     sf::RenderWindow window(sf::VideoMode(800, 600, 32), "Catan Board");
     window.setVerticalSyncEnabled(true);
     while (window.isOpen())
@@ -430,6 +430,7 @@ void Board::printBoard()
             if (event.type == sf::Event::Closed)
                 window.close();
         }
+        // Clear the window for the next frame
         window.clear();
         printBoard(window);
         window.display();
@@ -438,6 +439,7 @@ void Board::printBoard()
 
 shared_ptr<Vertex> Board::getVertex(vector<LandType> &places, vector<int> &placesNum) const
 {
+    // Check if the input is valid, we expect exactly 2 places and 2 numbers
     if (places.size() != placesNum.size() || places.size() != 2)
     {
         throw std::invalid_argument("The size of places and placesNum must be the same and exactly 2.");
@@ -446,6 +448,7 @@ shared_ptr<Vertex> Board::getVertex(vector<LandType> &places, vector<int> &place
     // Find vertices for the first hexagon
     map<VertexLocation, weak_ptr<Vertex>> hex1Vertices;
     bool firstHexagonFound = false;
+    // Find the first hexagon that matches the given land type and value
     for (const auto &[key, hex] : this->_hexagonsMap)
     {
         if (hex->getLandType() == places[0] && hex->getValue() == placesNum[0])
@@ -469,12 +472,13 @@ shared_ptr<Vertex> Board::getVertex(vector<LandType> &places, vector<int> &place
     {
         if (hex->getLandType() == places[1] && hex->getValue() == placesNum[1])
         {
-
+            // Get the vertices of the second hexagon and compare them with the vertices of the first hexagon
             const map<VertexLocation, weak_ptr<Vertex>> hex2Vertices = hex->getVerticesMap();
             for (const auto &[location, vertex] : hex2Vertices)
             {
                 for (const auto &[location1, vertex1] : hex1Vertices)
                 {
+                    // If the vertices match, return the shared pointer
                     if (vertex.lock() == vertex1.lock())
                     {
 
@@ -501,6 +505,7 @@ bool Board::hasRoad(shared_ptr<Vertex> v1, shared_ptr<Vertex> v2) const
 
 bool Board::vertexMatches(shared_ptr<Vertex> v, vector<LandType> &places, vector<int> &placesNum) const
 {
+    // Check if the input is valid, we expect exactly 2 places and 2 numbers
     if (places.size() != placesNum.size() || places.size() != 2)
     {
         throw std::invalid_argument("The size of places and placesNum must be the same and exactly 2.");
@@ -509,6 +514,7 @@ bool Board::vertexMatches(shared_ptr<Vertex> v, vector<LandType> &places, vector
     // Track found places
     int matchCount = 0;
 
+    // Check if the vertex matches the given land type and number of vertices
     for (const auto &hex : v->getHexagons())
     {
         if (!hex.expired())
@@ -536,6 +542,7 @@ vector<shared_ptr<Vertex>> Board::getNeighborVertices(shared_ptr<Vertex> v) cons
 {
     vector<shared_ptr<Vertex>> neighbors;
 
+    // Iterate over the trails of the vertex and add the connected vertices
     for (const auto &trail : v->getTrails())
     {
         if (!trail.expired())
@@ -552,6 +559,7 @@ vector<shared_ptr<Vertex>> Board::getNeighborVertices(shared_ptr<Vertex> v) cons
             {
                 neighbors.push_back(start);
             }
+            // Add the vertex that is not the input vertex
             if (end != v && find(neighbors.begin(), neighbors.end(), end) == neighbors.end())
             {
                 neighbors.push_back(end);
@@ -582,6 +590,7 @@ bool Board::distanceRule(shared_ptr<Vertex> v)
 {
     auto neighbors = getNeighborVertices(v);
 
+    // Iterate over the neighbors (3) and check if they are occupied
     for (auto &n : neighbors)
     {
         if (n->isOccupied())

@@ -1,5 +1,9 @@
+// ID: 205739907
+// Email: eladima66@gmail.com
+
 #ifndef _TRAIL_HPP_
 #define _TRAIL_HPP_
+#include <cmath>
 #include <memory>
 #include <SFML/Graphics.hpp>
 #include "Vertex.hpp"

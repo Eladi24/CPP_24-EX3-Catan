@@ -1,3 +1,6 @@
+// ID: 205739907
+// Email: eladima66@gmail.com
+
 #include <random>
 #include "Catan.hpp"
 
@@ -13,6 +16,7 @@ Catan::~Catan()
 }
 
 void Catan::ChooseStartingPlayer() {
+    // Roll the dice for each player
     int p1Roll = 0;
     int p2Roll = 0;
     int p3Roll = 0;
@@ -33,12 +37,12 @@ void Catan::ChooseStartingPlayer() {
 
         // The playing order is already correct: p1, p2, p3
         if (p2Roll > p3Roll) {
-            _currentPlayerIndex = 0;
+            
         // The playing order is p1, p3, p2    
         } else {
             // swapPlayers(_p2, _p3);
             std::swap(_p2, _p3);
-            _currentPlayerIndex = 0;
+            
         }
 
     //Case 2: p2 has the highest roll
@@ -50,7 +54,7 @@ void Catan::ChooseStartingPlayer() {
             // swapPlayers(_p2, _p3);
             std::swap(_p2, _p3);
         }
-        _currentPlayerIndex = 1;
+        
 
     //Case 3: p3 has the highest roll
     } else {
@@ -61,7 +65,7 @@ void Catan::ChooseStartingPlayer() {
             // swapPlayers(_p2, _p3);
             std::swap(_p2, _p3);
         }
-        _currentPlayerIndex = 2;
+        
     }
 
     _p1->setTurn(true);
@@ -73,6 +77,7 @@ void Catan::ChooseStartingPlayer() {
 
 Player &Catan::checkWinner()
 {
+    // Check if one of the players has 10 victory points
     if (_p1->getVictoryPoints() >= 10 && _p2->getVictoryPoints() < 10 && _p3->getVictoryPoints() < 10)
     {
         _gamePhase = END;
@@ -109,27 +114,19 @@ void Catan::printWinner()
     }
 }
 
-void Catan::changeTurn()
-{
-    if (_currentPlayerIndex == 2)
-    {
-        _currentPlayerIndex = 0;
-    }
-    else
-    {
-        _currentPlayerIndex++;
-    }
-}
 
 void Catan::yieldResources(int diceRoll)
 {
     // If the dice roll is < 0, the setup phase has ended and each player should yield resources from their structures
     if (diceRoll < 0)
-    {
+    {   
+        // Iterate over the vertices and yield resources to the players
         for (const auto &[key, hex] : _board.getHexagonsMap())
         {
+            // Iterate over the vertices of the hexagon
             for (const auto &[vertexKey, vertex] : hex->getVerticesMap())
-            {
+            {   
+                // If the vertex has a structure and the hexagon has a resource, yield the resource to the player
                 if ((vertex.lock())->getStructure() != nullptr && hex->getResourceType() != ResourceType::None)
                 {
                     (vertex.lock())->yieldResources(hex->getResourceType(), _cashbox);
@@ -139,8 +136,10 @@ void Catan::yieldResources(int diceRoll)
         return;
     }
 
+    // Case where the game is at the PLAY phase
     for (const auto &[key, hex] : _board.getHexagonsMap())
     {
+        // If the hexagon has the same value as the dice roll and the robber is not on the hexagon, yield resources to the players
         if (hex->getValue() == diceRoll && !hex->hasRobber())
         {
             for (const auto &[vertexKey, vertex] : hex->getVerticesMap())
@@ -151,6 +150,7 @@ void Catan::yieldResources(int diceRoll)
                 }
             }
         }
+        // If the robber is on the hexagon, the player does not get resources
         else if(hex->hasRobber() && hex->getValue() == diceRoll)
         {
             for (const auto &[vertexKey, vertex] : hex->getVerticesMap())
@@ -230,6 +230,7 @@ void Catan::analyzeDiceRoll(int roll_sum, Player*& currentPlayer)
         }
         
         shared_ptr<Hexagon> robberHex = _board.getRobberHexagon();
+        // Steal a resource from one of the other players that isn't the current player
         vector<Player*> otherPlayers;
         if(currentPlayer != _p1) otherPlayers.push_back(_p1);
         if(currentPlayer != _p2) otherPlayers.push_back(_p2);
@@ -275,7 +276,8 @@ void Catan::analyzeDiceRoll(int roll_sum, Player*& currentPlayer)
                 }
             }
         } else {
-            
+
+            // Check if a player has a longer road than the current longest road holder
             for (auto &player : players)
             {
                 if (player->countSequenceRoads() > _cashbox.getLongestRoadHolder()->countSequenceRoads())
@@ -289,6 +291,7 @@ void Catan::analyzeDiceRoll(int roll_sum, Player*& currentPlayer)
             }
         }
 
+        // Check if a player has the largest army
         if(!_cashbox.getLargestArmyHolder())
         {
             for (auto &player : players)
@@ -301,6 +304,7 @@ void Catan::analyzeDiceRoll(int roll_sum, Player*& currentPlayer)
                     break;
                 }
             }
+            // Check if a player has a larger army than the current largest army holder
         } else {
             for (auto &player : players)
             {

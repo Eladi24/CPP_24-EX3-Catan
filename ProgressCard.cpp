@@ -1,3 +1,5 @@
+// ID: 205739907
+// Email: eladima66@gmail.com
 
 #include "ProgressCard.hpp"
 
@@ -49,14 +51,3 @@ devCardAction Monopoly::activate()
     return this->_action;
 }
 
-
-// ProgressCard::~ProgressCard()
-// {
-// }
-
-// void ProgressCard::activate()
-// {
-//     // The player gets to activate the progress card
-//     cout << "Player " << _owner->getName() << " has activated a progress card" << endl;
-//     this->setUsed(true);
-// }

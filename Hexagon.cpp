@@ -1,3 +1,6 @@
+// ID: 205739907
+// Email: eladima66@gmail.com
+
 #include <iostream>
 #include <vector>
 #include <array>
@@ -62,7 +65,8 @@ void Hexagon::initHexagon(map<Point, vector<shared_ptr<Vertex>>> &verticesMap, m
         for (auto &[location, vertices] : verticesMap)
         {
             for (auto &vertex : vertices)
-            {
+            {   
+                // If the vertex already exists return it
                 if (*vertex == p)
                 {
 
@@ -71,25 +75,31 @@ void Hexagon::initHexagon(map<Point, vector<shared_ptr<Vertex>>> &verticesMap, m
             }
         }
         hexagonCounter++;
+        // Create a new vertex
         verticesMap[this->_center].push_back(make_shared<Vertex>(q, r, id));
         
         return verticesMap[this->_center].back();
     };
-
+    // Calculate each vertex of the hexagon by the center
     auto top = createVertex(this->_center.getX(), this->_center.getY() + 1, 0);
     top->addHexagon(shared_from_this());
 
     auto topRight = createVertex(this->_center.getX() + Vertex::squareRoot3Div2, this->_center.getY() + Vertex::half, 1);
     topRight->addHexagon(shared_from_this());
+
     auto bottomRight = createVertex(this->_center.getX() + Vertex::squareRoot3Div2, this->_center.getY() - Vertex::half, 2);
     bottomRight->addHexagon(shared_from_this());
+
     auto bottom = createVertex(this->_center.getX(), this->_center.getY() - 1, 3);
     bottom->addHexagon(shared_from_this());
+
     auto bottomLeft = createVertex(this->_center.getX() - Vertex::squareRoot3Div2, this->_center.getY() - Vertex::half, 4);
     bottomLeft->addHexagon(shared_from_this());
+
     auto topLeft = createVertex(this->_center.getX() - Vertex::squareRoot3Div2, this->_center.getY() + Vertex::half, 5);
     topLeft->addHexagon(shared_from_this());
-    // cast shared_ptr<Vertex> to weak_ptr<Vertex>
+
+    // Add the vertices to the vertices map
     this->_verticesMap[TOP] = top;
     this->_verticesMap[TOP_RIGHT] = topRight;
     this->_verticesMap[BOTTOM_RIGHT] = bottomRight;
@@ -108,6 +118,7 @@ void Hexagon::initHexagon(map<Point, vector<shared_ptr<Vertex>>> &verticesMap, m
                 {
                     shared_ptr<Vertex> start = edge->getStart().lock();
                     shared_ptr<Vertex> end = edge->getEnd().lock();
+                    // If the edge already exists return it
                     if ((*start == *v1 && *end == *v2) || (*start == *v2 && *end == *v1))
                     {
 
@@ -117,10 +128,12 @@ void Hexagon::initHexagon(map<Point, vector<shared_ptr<Vertex>>> &verticesMap, m
             }
         }
         EdgeCounter++;
+        // Create a new edge
         edgesMap[this->_center].push_back(make_shared<Trail>(v1, v2));
         return edgesMap[this->_center].back();
     };
 
+    // Create the edges of the hexagon
     auto topRightEdge = createEdge(top, topRight);
     auto rightEdge = createEdge(topRight, bottomRight);
     auto bottomRightEdge = createEdge(bottomRight, bottom);
@@ -134,6 +147,7 @@ void Hexagon::initHexagon(map<Point, vector<shared_ptr<Vertex>>> &verticesMap, m
     this->_edgesMap[BOTTOM_LEFT_EDGE] = bottomLeftEdge;
     this->_edgesMap[LEFT_EDGE] = leftEdge;
     this->_edgesMap[TOP_LEFT_EDGE] = topLeftEdge;
+    // Add the hexagon shared pointer to the trails
     top->addTrail(topRightEdge);
     top->addTrail(topLeftEdge);
     topRight->addTrail(topRightEdge);
@@ -173,26 +187,7 @@ string Hexagon::getLandTypeString()
     }
 }
 
-Point Hexagon::pointyHextoPixel(Point center, double size)
-{
-    double x = size * (sqrt(3.0) * center.getX() + sqrt(3.0) / 2 * center.getY());
-    double y = size * (3.0 / 2 * center.getY());
-    return Point(x, y);
-}
 
-Point Hexagon::pixelToPointyHex(Point p, double size)
-{
-    double q = (sqrt(3.0) / 3 * p.getX() - 1.0 / 3 * p.getY()) / size;
-    double r = (2.0 / 3 * p.getY()) / size;
-    return Point(q, r);
-}
-
-Point Hexagon::pixelToPointyHexFraction(double x, double y)
-{
-    double q = sqrt(3.0) / 3 * x - 1.0 / 3 * y;
-    double r = 2.0 / 3 * y;
-    return Point(q, r);
-}
 
 bool Hexagon::operator==(const Hexagon &other) const
 {

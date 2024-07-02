@@ -1,3 +1,6 @@
+// ID: 205739907
+// Email: eladima66@gmail.com
+
 #include "KnightCard.hpp"
 
 using namespace ariel;

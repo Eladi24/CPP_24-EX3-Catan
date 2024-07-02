@@ -1,3 +1,6 @@
+// ID: 205739907
+// Email: eladima66@gmail.com
+
 #ifndef _CATAN_HPP_
 #define _CATAN_HPP_
 
@@ -5,6 +8,7 @@
 #include "Player.hpp"
 namespace ariel
 {
+    
     enum GamePhase
         {
             SETUP,
@@ -22,19 +26,13 @@ namespace ariel
         Cashbox _cashbox;
         Die _die1;
         Die _die2;
-        int _turnCounter; 
-        int _currentPlayerIndex;
-        int roundCounter;
+        
         GamePhase _gamePhase;
         
         Player& checkWinner();
         
-
-
-            
-        
     public:
-        Catan(Player*& p1, Player*& p2, Player*& p3): _p1(p1), _p2(p2), _p3(p3), _board(), _cashbox(), _turnCounter(0), _currentPlayerIndex(0), roundCounter(0), _gamePhase(SETUP) {}
+        Catan(Player*& p1, Player*& p2, Player*& p3): _p1(p1), _p2(p2), _p3(p3), _board(), _cashbox(), _gamePhase(SETUP) {}
         
         ~Catan();
         /*
@@ -54,7 +52,7 @@ namespace ariel
         * If there is no winner yet, it will print "No winner yet"
         */
         void printWinner();
-        void changeTurn();
+
         /*
         * @brief
         * This function is responsible for yielding resources to the players

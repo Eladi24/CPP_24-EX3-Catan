@@ -1,3 +1,6 @@
+// ID: 205739907
+// Email: eladima66@gmail.com
+
 #include <iostream>
 #include <vector>
 #include "Cashbox.hpp"
@@ -146,6 +149,7 @@ void Player::removeResource(ResourceType resource, Cashbox &cashbox, size_t amou
         throw invalid_argument("Player does not have enough resources to remove");
     }
 
+    // Remove the resource cards from the player's resource cards and return them to the cashbox
     for (size_t i = 0; i < amount; i++)
     {
         ResourceCard card = this->_resourceCards[resource].back();
@@ -154,15 +158,20 @@ void Player::removeResource(ResourceType resource, Cashbox &cashbox, size_t amou
     }
 }
 
+
 void Player::setTurn(bool isTurn)
-{
+{   
+    // Set the isTurn field
     this->_isTurn = isTurn;
+
+    // If it is the player's turn, check if he bought on a previous cycle turn
     if (isTurn)
     {
         for (auto &[cardType, devCards] : this->_devCards)
         {
             for (auto &card : devCards)
-            {
+            {   
+                // If the card was bought on a previous cycle turn, set it to be used
                 if (!card->isUsed() && !card->canUse())
                 {
                     card->setCanUse(true);
@@ -233,6 +242,7 @@ void Player::removeVictoryPoints(int points)
 void Player::placeSettelemnt(vector<LandType> places, vector<int> placesNum, Board &board, Cashbox &cashbox)
 {
 
+    // We assume that the player provides the correct number of places and placesNum which is 2
     if (places.size() != 2 || placesNum.size() != 2)
     {
         throw invalid_argument("Invalid number of arguments");
@@ -250,6 +260,7 @@ void Player::placeSettelemnt(vector<LandType> places, vector<int> placesNum, Boa
         throw invalid_argument("Player cannot place a settlement here");
     }
 
+    // Build a settlement
     vertex->buildSettlement(this);
     this->_structures[vertex] = vertex->getStructure();
     // Add victory points
@@ -261,6 +272,7 @@ void Player::placeSettelemnt(vector<LandType> places, vector<int> placesNum, Boa
 
 void Player::placeRoad(vector<LandType> places, vector<int> placesNum, Board &board, Cashbox &cashbox)
 {
+    // We assume that the player provides the correct number of places and placesNum which is 2
     if (places.size() != 2 || placesNum.size() != 2)
     {
         throw std::invalid_argument("Must specify exactly two places and their numbers.");
@@ -282,9 +294,10 @@ void Player::placeRoad(vector<LandType> places, vector<int> placesNum, Board &bo
     auto neighbors = board.getNeighborVertices(v1);
 
     shared_ptr<Vertex> v2 = nullptr;
+    // Iterate through the neighbors to find the second vertex
     for (auto &neighbor : neighbors)
     {
-
+        // Check if the neighbor matches the provided places and placesNum
         if (board.vertexMatches(neighbor, places, placesNum))
         {
             v2 = neighbor;
@@ -327,6 +340,7 @@ void Player::placeRoad(vector<LandType> places, vector<int> placesNum, Board &bo
                     }
                 }
             }
+            // if v2 is occupied, check for available trails to build a road continuation
             else if (v2->isOccupied())
             {
                 neighbors = board.getNeighborVertices(v1);
@@ -361,6 +375,8 @@ void Player::placeRoad(vector<LandType> places, vector<int> placesNum, Board &bo
 
 bool Player::canPlaceRoad(shared_ptr<Vertex> v1, shared_ptr<Vertex> v2)
 {
+    // A road can be placed if it is the starting phase and the player has enough resources
+    
     if (!_isStatringPhase)
     {
         if (!this->canAffordRoad())
@@ -397,11 +413,13 @@ bool Player::canPlaceRoad(shared_ptr<Vertex> v1, shared_ptr<Vertex> v2)
 
 bool Player::canPlaceSettlement(shared_ptr<Vertex> v, Board &board)
 {
+    // If a settlement is already built on the vertex, the player cannot build another one
     if (this->_structures.find(v) != this->_structures.end())
     {
         throw invalid_argument("Vertex already has a structure");
     }
 
+    // If its a game play phase, check if the player can afford a settlement
     if (!_isStatringPhase)
     {
         if (this->canAffordSettlement())
@@ -424,6 +442,7 @@ bool Player::canPlaceSettlement(shared_ptr<Vertex> v, Board &board)
 
 bool Player::canPlaceCity(shared_ptr<Vertex> v)
 {
+
     if (this->canAffordCity())
     {
         if (this->_structures.find(v) != this->_structures.end())
@@ -510,13 +529,15 @@ void Player::moveRobber(Board &board)
     // Move the robber to a new hexagon with the strategy of moving to the hexagon with 2 players that are not the current player
     shared_ptr<Hexagon> newHex = nullptr;
 
+    // Iterate through the hexagons on the board
     for (const auto &[key, hexagon] : board.getHexagonsMap())
-    {
+    {   // Check if the hexagon has the robber
         if (!hexagon->hasRobber())
         {
             int count = 0;
             for (const auto &[vertexKey, vertex] : hexagon->getVerticesMap())
             {
+                // If the vertex has a structure and the owner is not the current player
                 if ((vertex.lock())->getStructure() != nullptr)
                 {
                     if ((vertex.lock())->getStructure()->getOwner() != this)
@@ -526,6 +547,7 @@ void Player::moveRobber(Board &board)
                 }
             }
 
+            // If the hexagon has 2 players that are not the current player, move the robber to this hexagon
             if (count == 2)
             {
                 newHex = hexagon;
@@ -576,6 +598,7 @@ void Player::activateDevCard(Board &board, Cashbox &cashbox, vector<Player *> pl
     DevCard *card = it->second.back();
     devCardAction action = card->activate();
 
+    // Switch case to handle the different dev card actions
     switch (action)
     {
     case devCardAction::GET_2_FREE_RESOURCES:
@@ -666,18 +689,20 @@ void Player::activateDevCard(Board &board, Cashbox &cashbox, vector<Player *> pl
 
 void Player::placeCity(vector<LandType> places, vector<int> placesNum, Board &board, Cashbox &cashbox)
 {
-
+    // We assume that the player provides the correct number of places and placesNum which is 2
     if (places.size() != 2 || placesNum.size() != 2)
     {
         throw invalid_argument("Invalid number of arguments");
     }
 
+    // Get the vertex where the city is supposed to be placed
     shared_ptr<Vertex> vertex = board.getVertex(places, placesNum);
     if (vertex == nullptr)
     {
         throw invalid_argument("Invalid vertex");
     }
 
+    // Check if the player can place a city here
     if (!this->canPlaceCity(vertex))
     {
         throw invalid_argument("Player cannot place a city here");
@@ -734,12 +759,14 @@ map<shared_ptr<Vertex>, vector<shared_ptr<Vertex>>> Player::getRoadNetwork() con
 {
     map<shared_ptr<Vertex>, vector<shared_ptr<Vertex>>> roadNetwork;
 
+    // Iterate through the roads and add the connected vertices to the road network
     for (const auto &roadPair : _roads)
     {
         auto trail = roadPair.first;
         auto start = trail->getStart().lock();
         auto end = trail->getEnd().lock();
 
+        // If the start and end vertices are not in the road network, add them
         if (start && end)
         {
             roadNetwork[start].push_back(end);
@@ -774,6 +801,7 @@ size_t Player::countSequenceRoads()
     map<shared_ptr<Vertex>, bool> visited;
     size_t longestRoad = 0;
 
+    // Iterate through the vertices in the road network and find the longest road with DFS
     for (const auto &roadPair : roadNetwork)
     {
         auto vertex = roadPair.first;

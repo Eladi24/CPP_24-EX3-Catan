@@ -1,29 +1,40 @@
-# קטאן - מחלקות וירושה
-המתיישבים של קטאן הוא משחק קופסא ל-3 עד 4 שחקנים המשלב הן חשיבה אסטרטגית, ניהול משאבים ויכולת מסחר. מטרת המשחק היא לצבור ראשון 10 נקודות ניצחון.
-את הוראות המשחק המלא ניתן למצוא כאן: https://www.hakubia.com/wp-content/uploads/2021/01/%D7%A7%D7%98%D7%90%D7%9F.pdf.
-במטלה אתם תממשו גרסה פשוטה יותר של המשחק עבור 3 שחקנים.
-## חוקי המשחק
-המשחק מורכב מלוח המכיל 19 חלקות אדמה מוקפות בים. כל חלקת אדמה נותנת משאב כלשהו (חוץ מהמדבר). חלקות האדמה במשחק הן: יער (מניב עץ), גבעות (מניבות לבנים), אדמת מרעה (מניבה צמר), אדמה חקלאית (מניבה שיבולת), הרים (מניבים ברזל), מדבר (לא מניב כלום).
-כל חלקי המפה מקבלים מספר כלשהו בין 2 ל-12. 
-### קלפים, יישובים, ערים ומשאבים
-כל שחקן בעל משאבים (כגון שיבולת, ברזל, לבנים וכו') יכול לרכוש איתם דברים שונים במשחק כמו קלפי פיתוח, יישובים, ערים ודרכים.
-- קלף פיתוח: מחירו של קלף פיתוח הוא ברזל 1, צמר 1 ושיבולת 1. השחקן יכול לקבל אחד מ-3 סוגים שונים של קלפים: 1. קלף קידום: זהו קלף המעניק הטבה לשחקן (לאחר מכן הקלף נעלם). בין הקלפים הללו ניתן למצוא: מונופול - השחקן בוחר משאב כלשהו וכל שאר השחקנים מחוייבים להעביר לו את המשאב הזה. בניית דרכים - השחקן יכול לבנות 2 דרכים במפה ללא עלות. שנת שפע - השחקן זוכה לקבל מהבנק שני קלפים של משאבים לבחירה ולהשתמש בהם באותו התור. 2. אבירים - שחקן המחזיק ב-3 קלפים כאלה, מקבל את קלף הצבא הגדול ביותר המקנה לו 2 נקודות ניצחון (אם איבד אביר אחד, הקלף נלקח מהשחקן. שימו לב שיש בדיוק 3 קלפים כאלה!). 3. קלפי נקודות ניצחון - יש 4 קלפים שונים המעניקים נקודת ניצחון למי שמחזיק בהם.
-- בנייה: ניתן לבנות דרכים, ערים ויישובים בצורה הבאה: 1. קטע דרך: עלותו לבנים 1 ועץ 1. קטע דרך יכול להיות מחובר רק ליישוב (או עיר) בבעלות השחקן או לקטע דרך נוסף. 2. יישוב: עלות היישוב היא לבנה 1, עץ 1, צמר 1 ושיבולת 1. ניתן לבנות יישוב על צומת שאליה מובילה דרך אחת לפחות ומברחק של 2 קטעי דרך מיישוב אחר. בניית יישוב מקנה לשחקן נקודת ניצחון אחת. 3. עיר: עיר יכולה להחליף יישוב קיים. עלות הבנייה היא ברזל 3 ושיבולת 2. ברגע שמשדרגים יישוב לעיר, השחקן מאבד את הנקודה של היישוב ומקבל 2 נקודות על הבנייה. עיר מעניקה לשחקן פי-2 יותר משאבים מכל חבלי הארץ הסמוכים לה.
-- משאבים: כאמור, המשאבים מתקבלים מחבלי הארץ השונים. כאשר שחקן מטיל את קוביות המשחק, כל השחקנים מקבלים משאבים בהתאם למספר שיצא בהטלה (כלומר אם יצא 3 בהטלה, אז שחקנים עם יישובים/ערים הגובלים עם חבלי ארץ בעלי אותו מספר זוכים במשאב).
-- מסחר: שחקנים יכולים לבצע מסחר ביניהם (כלומר להחליף קלפים או משאבים) בהתאם לאיך שהם קובעים.
-### מהלך המשחק
-כל שחקן מתחיל את המשחק עם 2 יישובים ו-2 קטעי דרך המעניקים לו 2 נקודות ניצחון. בנוסף, השחקנים מקבלים משאבים התחלתיים בהתאם למקומות שבהם הם מיקמו את היישובים (משאב אחד מכל משאב אפשרי).
-סדר המשחק נקבע באופן שרירותי (לשיקולכם). בכל תור השחקנים מטילים 2 קוביות. בהתאם לתוצאת ההטלה, השחקנים מקבלים משאבים כמו שפורט מקודם.
-שחקן בתור נתון עושה את הפעולות הבאות לפי הסדר (לאחר הטלת הקוביות):
-- הוא יכול לסחור (כלומר להחליף קלפים או משאבים).
-- הוא יכול לבנות דרכים, יישובים או ערים ויכול לקנות קלפי פיתוח.
-  אם השחקן מנצל את אחד מקלפי הפיתוח שברשותו, התור אוטומטית עובר לשחקן הבא (השחקן יכול לנצל את קלף הפיתוח עוד לפני הטלת הקוביות, במקרה כזה התור עובר לשחקן הבא).
-  אם סכום ההטלה הוא 7, על כל השחקנים בעלי יותר מ-7 קלפי משאבים לבחור מחצית מהקלפים ולהחזיר אותם לערימה.
-  ### סיום המשחק
-  המשחק מסתיים בתור שבו אחד השחקנים הגיע ל-10 או יותר נקודות ניצחון. כדי לנצח במשחק, השחקן צריך שיגיע תורו ובאותו התור יהיו לו 10 נקודות לכל הפחות.
+# Catan Game Engine
 
+## Author
+- **Name:** Elad Imany
+- **Email:** eladima66@gmail.com
 
-שימו לב - במטלה הזאת אתם לא מקבלים קבצים לדוגמה מלבד הדמו. עליכם לחשוב לבד על הלוגיקה של המשחק ולממש את החוקים (כמובן שאתם יכולים לממש לפי ראות עיניכם אבל עם הסבר). במטלה הזאת אתם תיבחנו גם על יצירתיות. נסו לבנות את לוח המשחק בצורה שתתאים למשחק המקורי (חשבו איך לממש דבר כזה, אולי להוסיף עוד מחלקות?). כמו כן, **חובה** לצרף בדיקות יחידה למטלה הזאת. הסיבה היא פשוטה - המטלה מורכבת מאוד ואתם נדרשים לבדוק את הקוד שלכם. 
+## Project Overview
+This project implements the core logic and structure for a digital version of the popular board game, Catan. The game of Catan is a multiplayer board game that revolves around resource gathering, trading, and building with the ultimate goal of earning victory points to win. The game is set on an island where players build settlements, cities, and roads on hexagonal tiles, each representing different types of land that produce specific resources.
 
-יש להוסיף קובץ Makefile כאשר הפקודה ``` make catan ``` מריצה את התוכנית הראשית שלכם (המדגימה סיבוב אחד במשחק). עליכם להגיש קובץ ```README``` המסביר את המימוש שלכם (כלומר מהם חוקי המשחק שהגדרתם), ההיררכיה של המחלקות ובאילו ספריות השתמשתם. עליכם גם לתאר את כל השיטות שכתבתם, ולכתוב תוכנית ```main``` המריצה סיבוב תקין של המשחק. כמו כן, עליכם לכתוב בתחילת כל קובץ את מספר תעודת הזהות שלכם ואת המייל. אי עמידה בהנחיות תגרור הפחתה בציון. 
-בהצלחה!
+## Class Hierarchy and Libraries
+
+### Classes
+The project is structured around several key classes, each representing a component of the game:
+- **Point and Vertex:** Represent points and vertices on the game board. Vertex extends Point and is used to manage settlements and cities.
+- **Hexagon:** Represents the hexagonal tiles on the board.
+- **Trail:** Represents the paths (edges) between vertices where roads can be built.
+- **Structure, Settlement, and Road:** Abstract and concrete classes for the buildings and roads players can construct.
+- **Player:** Represents a player in the game, managing their resources, cards, and constructions.
+- **DevCard, ProgressCard, and VictoryPointCard:** Represent the development cards that players can purchase and use for various effects.
+- **Cashbox:** Manages the game's currency and transactions.
+
+### Libraries
+Libraries used in this project include:
+- **SFML (Simple and Fast Multimedia Library):** Used for rendering the game board and interactive elements.
+- **C++ Standard Library:** Provides data structures, memory management, and utility functions.
+
+## Key Methods
+Some of the important methods implemented in this project include:
+- **Resource Management:** Methods for managing resources, such as `yieldResources` in Settlement and Structure, which handle the production of resources based on the game's rules.
+- **Building and Upgrading:** Methods like `buildSettlement`, `buildCity`, and `setRoad` in Vertex and Trail classes, allowing players to construct and upgrade their buildings and roads.
+- **Card Management:** Methods for handling development cards, including purchasing and activating them. Each card type, such as ProgressCard and VictoryPointCard, has an `activate` method that implements its unique effect.
+
+## Additional Resources
+A very helpful guide for understanding and implementing hexagonal grids, which are a core part of the Catan board, can be found here: [Hexagonal Grids](https://www.redblobgames.com/grids/hexagons/).
+
+## Additional Notes
+This project is designed with extensibility in mind, allowing for future enhancements such as AI players, different board layouts, and additional development cards. The use of polymorphism and abstract classes facilitates the addition of new features without significant modifications to the existing codebase.
+
+## Conclusion
+This Catan game engine project lays the foundation for a fully functional digital version of the game, focusing on the core mechanics, class design, and interaction between different components of the game. It provides a solid base for further development, including graphical interface implementation, networked multiplayer, and game rule expansions.

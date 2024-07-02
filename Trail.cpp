@@ -1,3 +1,6 @@
+// ID: 205739907
+// Email: eladima66@gmail.com
+
 #include <iostream>
 #include <vector>
 #include "Road.hpp"
@@ -45,8 +48,6 @@ double Trail::getLength() const
    }
 }
 
-#include <SFML/Graphics.hpp>
-#include <cmath> // For atan2 and hypot
 
 void Trail::draw(sf::RenderWindow& window, double startX, double startY, double endX, double endY)
 {

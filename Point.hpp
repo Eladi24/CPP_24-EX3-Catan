@@ -1,3 +1,6 @@
+// ID: 205739907
+// Email: eladima66@gmail.com
+
 #ifndef _POINT_HPP_
 #define _POINT_HPP_
 #include <iostream>
@@ -21,15 +24,7 @@ namespace ariel
         bool operator==(const Point &p) const;
         bool operator<(const Point &p) const;
         double distance(const Point &p) const;
-        
-        // Hash function for Point
-        struct PointHasher
-        {   
-            size_t operator()(const Point &p) const
-            {
-                return hash<double>()(p._x) ^ hash<double>()(p._y);
-            }
-        };
+    
     };
 }
 

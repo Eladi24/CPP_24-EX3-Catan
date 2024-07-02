@@ -1,4 +1,6 @@
-// Author: Elad Imany 205739907
+// ID: 205739907
+// Email: eladima66@gmail.com
+
 #ifndef _DIE_HPP_
 #define _DIE_HPP_
 #include <cstdlib>

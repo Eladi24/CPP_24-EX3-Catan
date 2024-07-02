@@ -1,4 +1,7 @@
-# Compiler: clang++
+# ID: 205739907
+# Email: eladima66@gmail.com
+# Compiler: g++
+
 CXX=g++
 # Compiler flags
 CXXFLAGS=-std=c++17 -Wall -g
